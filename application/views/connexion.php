@@ -1,4 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <a href="<?= base_url('user/inscription') ?>">Inscription</a>
-</html>
+
+<div class="container">
+	<a href="<?= base_url('user/inscription') ?>">Inscription</a>
+</div>

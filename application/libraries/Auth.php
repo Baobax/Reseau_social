@@ -47,36 +47,4 @@ class Auth
 		}
 		*/
 	}
-
-############################################################################
-
-	public function is_admin()
-	{
-		/*
-		if (is_numeric($this->CI->session->userdata('admin_id')))
-			return true;
-		return false;
-		*/
-	}
-
-	public function check_is_logged_admin()
-	{
-		/*
-		if (!$this->is_admin())
-		{
-			redirect('back/admin/login', 'refresh');
-			return;
-		}
-		else
-		{
-			$admin_id = $this->CI->session->userdata('admin_id');
-			$this->CI->load->model('admin_model');
-			$user     = $this->CI->admin_model->get($admin_id);
-			if (!$user)
-				redirect("back/admin/logout");
-
-			return $this->CI->session->userdata('admin_id');
-		}
-		*/
-	}
 }

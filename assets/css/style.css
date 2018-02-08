@@ -1,49 +1,38 @@
-/* YOUR CUSTOM STYLES */
-
-nav{
-    color: #744455;
+* {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
 }
 
-
-main {
-    padding-top: 10rem;
-    padding-bottom: 2rem;
+.navbar {
+    background: #222222;
+    border: none;
+    border-radius: 0;
+    padding: 5px;
+    box-shadow: 0 0 5px;
 }
 
-.extra-margins {
-    margin-top: 1rem;
-    margin-bottom: 2.5rem;
+.navbar a {
+    color: white !important;
 }
 
-html,body {
-    height: 100%;
+.navbar a:hover {
+    background: white !important;
+    color: #222222 !important;
 }
 
-.view {
-    background: url("../img/pattern-rose.png")no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    min-height: 100%; 
-    height:auto;
+.dropdown-menu a {
+    color: #222222 !important;
 }
 
-#admin{
-    min-height: 200%;/* pour l'administrateur*/
+.dropdown-menu a:hover {
+    background: #222222 !important;
+    color: white !important;
 }
 
-#inscript{
-    min-height: 170%;/* pour l'inscription*/
-}
-
-#depotDemande, #consultationDemandes{
-    background-color: white;
-    -moz-border-radius:10px 0;
-    -webkit-border-radius:10px 0;
-    border-radius:10px 10px;
-    padding:10px;
-    opacity: 0.9;
-    height: auto;
-
+footer {
+  background-color: #222222;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
