@@ -1,0 +1,49 @@
+/* YOUR CUSTOM STYLES */
+
+nav{
+    color: #744455;
+}
+
+
+main {
+    padding-top: 10rem;
+    padding-bottom: 2rem;
+}
+
+.extra-margins {
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+html,body {
+    height: 100%;
+}
+
+.view {
+    background: url("../img/pattern-rose.png")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100%; 
+    height:auto;
+}
+
+#admin{
+    min-height: 200%;/* pour l'administrateur*/
+}
+
+#inscript{
+    min-height: 170%;/* pour l'inscription*/
+}
+
+#depotDemande, #consultationDemandes{
+    background-color: white;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+    border-radius:10px 10px;
+    padding:10px;
+    opacity: 0.9;
+    height: auto;
+
+}
