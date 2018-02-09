@@ -18,13 +18,15 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('password', 'Mot de passe', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $postdata['login'] = $this->input->post('login');
-            $postdata['password'] = hash('SHA256', $this->input->post('password'));
+            $login = $this->input->post('login');
+            $password = hash('SHA256', $this->input->post('password'));
 
-            //$user = $this->user_model->get_by($postdata);
-            $user = 1;
-            if (isset($user)) {
-                $this->session->set_userdata('user_login', "test_sans_bd");
+            $this->load->model('user_model');
+            $user = $this->user_model->connexion($login, $password);
+
+            //si $user[0] existe, cela veut dire que la personne existe bien et a rentré les bons identifiants
+            if (isset($user[0])) {
+                $this->session->set_userdata('user_login', $user[0]['login']);
 
                 redirect("user/page");
             } else {
@@ -51,15 +53,15 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $postdata['login'] = $this->input->post('login');
+            $login = $this->input->post('login');
             $nom = $this->input->post('nom');
             $prenom = $this->input->post('prenom');
-            $postdata['email'] = $this->input->post('email');
-            $postdata['password'] = hash('SHA256', $this->input->post('password'));
+            $email = $this->input->post('email');
+            $password = hash('SHA256', $this->input->post('password'));
 
             $this->load->model('user_model');
-            $this->user_model->inscription($nom, $prenom);
-            $this->session->set_userdata('login', 'test');
+            $this->user_model->inscription($login, $password, $nom, $prenom);
+            $this->session->set_userdata('user_login', $login);
 
             $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
 

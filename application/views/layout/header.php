@@ -45,7 +45,7 @@
                         <li><a href="<?= base_url('groupes') ?>" class="<?php if ($page_title == 'Mes groupes') echo 'active'; ?>"><i class="fa fa-users" aria-hidden="true"> Mes groupes</i></a></li>
                         <li><a href="<?= base_url('evenements') ?>" class="<?php if ($page_title == 'Mes événements') echo 'active'; ?>"><i class="fa fa-calendar" aria-hidden="true"> Mes événements</i></a></li>
                         <li class="dropdown">
-                            <a class="<?php if ($page_title == 'Mon compte') echo 'active'; ?>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"> Mon compte</i><span class="caret"></span></a>
+                            <a class="<?php if ($page_title == 'Mon compte') echo 'active'; ?>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"> <?= $this->session->userdata('user_login') ?></i><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Mes amis</a></li>
                                 <li><a href="#">Mes informations</a></li>

@@ -8,8 +8,13 @@ class User_model extends CI_Model {
         $this->load->library('neo');
     }
 
-    public function inscription($nom, $prenom) {
-        $cypher = "CREATE(user:USER{nom: '$nom', prenom: '$prenom'})";
+    public function connexion($login, $password) {
+        $cypher = "MATCH (user:USER) WHERE user.login = '$login' AND user.password = '$password' RETURN user.login";
+        return $this->neo->execute_query($cypher);
+    }
+
+    public function inscription($login, $password, $nom, $prenom) {
+        $cypher = "CREATE(user:USER{login: '$login', password: '$password', nom: '$nom', prenom: '$prenom'})";
         $this->neo->execute_query($cypher);
     }
 
