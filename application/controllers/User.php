@@ -9,8 +9,13 @@ class User extends CI_Controller {
     }
 
     public function connexion() {
+        if ($this->session->userdata('user_login') != NULL) {
+            redirect('user/page');
+        }
+
+
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
-        $this->form_validation->set_rules('password', 'Password', 'required|trim');
+        $this->form_validation->set_rules('password', 'Mot de passe', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
             $postdata['login'] = $this->input->post('login');
@@ -36,18 +41,25 @@ class User extends CI_Controller {
     }
 
     public function inscription() {
+        if ($this->session->userdata('user_login') != NULL) {
+            redirect('user/page');
+        }
+
+
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
         //$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|is_unique[user.email]');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
             $postdata['login'] = $this->input->post('login');
-            $postdata['nom'] = $this->input->post('nom');
-            $postdata['prenom'] = $this->input->post('prenom');
+            $nom = $this->input->post('nom');
+            $prenom = $this->input->post('prenom');
             $postdata['email'] = $this->input->post('email');
             $postdata['password'] = hash('SHA256', $this->input->post('password'));
 
-            //$this->user_model->insert($postdata);
+            $this->load->model('user_model');
+            $this->user_model->inscription($nom, $prenom);
+            $this->session->set_userdata('login', 'test');
 
             $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
 

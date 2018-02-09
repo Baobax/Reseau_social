@@ -6,7 +6,9 @@
 
                 <hr>
 
-                <?= validation_errors(); ?>
+                <div class="alert alert-danger">
+                    <?= validation_errors(); ?>
+                </div>
                 <?= $this->session->flashdata("message"); ?>
 
                 <?= form_open() ?>
