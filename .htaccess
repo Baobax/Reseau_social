@@ -1,16 +1,25 @@
-#   Empêche la visualisation de l'arborescence, n'a rien à voir avec le masquage du « index.php ».
-Options -Indexes
+<IfModule mod_rewrite.c>
+# Turn on URL rewriting
+RewriteEngine On
 
-#   Active le module de réécriture d'URL.
-RewriteEngine on
+# If your website begins from a folder e.g localhost/my_project then 
+# you have to change it to: RewriteBase /my_project/
+# If your site begins from the root e.g. example.local/ then
+# let it as it is
+RewriteBase /Reseau_social/
 
-#
-#   Fixe les règles de réécriture d'URL. Ici, nous utilisons une liste blanche.
-#
+# Protect application and system files from being viewed when the index.php is missing
+RewriteCond $1 ^(application|system|private|logs)
 
-#   Toutes les URL qui ne correspondent pas à ces masques sont réécrites.
-RewriteCond $1 !^(index\.php|assets/|robots\.txt)
+# Rewrite to index.php/access_denied/URL
+RewriteRule ^(.*)$ index.php/access_denied/$1 [PT,L]
 
-#   Toutes les autres URL vont être redirigées vers le fichier index.php.
-RewriteRule ^(.*)$ index.php/$1 [L]
+# Allow these directories and files to be displayed directly:
+RewriteCond $1 ^(index\.php|robots\.txt|favicon\.ico|public|assets|css|js|images)
 
+# No rewriting
+RewriteRule ^(.*)$ - [PT,L]
+
+# Rewrite to index.php/URL
+RewriteRule ^(.*)$ index.php/$1 [PT,L]
+</IfModule>

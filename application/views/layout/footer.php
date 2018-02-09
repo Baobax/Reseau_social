@@ -1,5 +1,5 @@
 	<footer class="footer navbar-fixed-bottom">
-		TheHerd © 2018
+		Nom du site © 2018
 	</footer>
 </body>
 </html>

@@ -1,38 +1,72 @@
 * {
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
+	font-family: "Lato", sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.text-center {
+	text-align: center;
 }
 
 .navbar {
-    background: #222222;
-    border: none;
-    border-radius: 0;
-    padding: 5px;
-    box-shadow: 0 0 5px;
+	background: #222222;
+	border: none;
+	border-radius: 0;
+	padding: 5px;
+	/*box-shadow: 0 0 5px;*/
 }
 
 .navbar a {
-    color: white !important;
+	color: white !important;
 }
 
 .navbar a:hover {
-    background: white !important;
-    color: #222222 !important;
+	background: white !important;
+	color: #222222 !important;
 }
 
 .dropdown-menu a {
-    color: #222222 !important;
+	color: #222222 !important;
 }
 
 .dropdown-menu a:hover {
-    background: #222222 !important;
-    color: white !important;
+	background: #222222 !important;
+	color: white !important;
 }
 
+/*
+.navbar-nav {
+	width: 100%;
+	text-align: center;
+}
+
+.navbar-nav > li {
+	float: none;
+	display: inline-block;
+}
+*/
+
+/*--------------Identification--------------*/
+.bloc_identification {
+	background: #222222;
+	padding: 10px;
+	border: 1px solid #222222;
+	color: white;
+}
+
+.bloc_identification form button {
+	color: black;
+}
+
+.bloc_identification a {
+	color: white;
+}
+
+
+
 footer {
-  background-color: #222222;
-  color: white;
-  padding: 10px;
-  text-align: center;
+	background-color: #222222;
+	color: white;
+	padding: 10px;
+	text-align: center;
 }
