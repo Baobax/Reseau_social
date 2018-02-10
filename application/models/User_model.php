@@ -21,7 +21,7 @@ class User_model extends CI_Model {
         }
 
 
-        $cypher = "CREATE(user:USER{login: '$login', password: '$password', nom: '$nom', prenom: '$prenom'})";
+        $cypher = "CREATE(user:USER{login: '$login', password: '$password', prenom: '$prenom', nom: '$nom'})";
         $this->neo->execute_query($cypher);
 
         return true;

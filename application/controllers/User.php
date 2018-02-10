@@ -49,7 +49,7 @@ class User extends CI_Controller {
 
 
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
-        //$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|is_unique[user.email]');
+        $this->form_validation->set_rules('email', 'eMail', 'required|trim|valid_email|is_unique[user.email]');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
@@ -90,6 +90,18 @@ class User extends CI_Controller {
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/page');
+        $this->load->view('layout/footer');
+    }
+
+    public function mesInformations() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $data['page_title'] = 'Mes informations';
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('user/mes_informations');
         $this->load->view('layout/footer');
     }
 
