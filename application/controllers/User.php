@@ -60,12 +60,17 @@ class User extends CI_Controller {
             $password = hash('SHA256', $this->input->post('password'));
 
             $this->load->model('user_model');
-            $this->user_model->inscription($login, $password, $nom, $prenom);
-            $this->session->set_userdata('user_login', $login);
+            $testExistance = $this->user_model->inscription($login, $password, $nom, $prenom);
 
-            $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
+            if (!$testExistance) {
+                $this->session->set_flashdata('message', '<div>Ce login existe déjà, choisissez-en un autre.</div>');
+                redirect('user/inscription');
+            } else {
+                $this->session->set_userdata('user_login', $login);
+                $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
 
-            redirect('user/page');
+                redirect('user/page');
+            }
         }
 
 

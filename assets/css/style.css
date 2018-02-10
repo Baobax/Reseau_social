@@ -8,6 +8,10 @@
 	text-align: center;
 }
 
+body {
+    padding-top: 80px;
+}
+
 .navbar {
 	background: #222222;
 	border: none;
@@ -18,15 +22,18 @@
 
 .navbar a {
 	color: white !important;
+        margin: 0 5px;
+	font-size: 20px;
 }
 
-.navbar a:hover {
+.navbar a:hover, .navbar .active {
 	background: white !important;
 	color: #222222 !important;
 }
 
 .dropdown-menu a {
 	color: #222222 !important;
+        font-size: 16px;
 }
 
 .dropdown-menu a:hover {
@@ -34,24 +41,23 @@
 	color: white !important;
 }
 
-/*
-.navbar-nav {
+.navbar_identification {
 	width: 100%;
 	text-align: center;
 }
 
-.navbar-nav > li {
+.navbar_identification > li {
 	float: none;
 	display: inline-block;
 }
-*/
 
 /*--------------Identification--------------*/
 .bloc_identification {
 	background: #222222;
-	padding: 10px;
-	border: 1px solid #222222;
+	padding: 20px;
+	border: 2px solid #222222;
 	color: white;
+        /*box-shadow: 0 0 5px 0 black;*/
 }
 
 .bloc_identification form button {
@@ -69,4 +75,5 @@ footer {
 	color: white;
 	padding: 10px;
 	text-align: center;
+        margin-top: 20px;
 }
