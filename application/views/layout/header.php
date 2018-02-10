@@ -26,6 +26,16 @@
         <link type="text/css" href="<?= base_url(); ?>/assets/css/style.css" rel="stylesheet">
     </head>
     <body>
+        <style>
+            body, .navbar {
+                background: <?= $this->session->userdata('couleur_site'); ?>;
+            }
+
+            .corps {
+                color: <?= $this->session->userdata('couleur_texte'); ?>;
+                background: <?= $this->session->userdata('fond_site'); ?>;
+            }
+        </style>
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -50,7 +60,7 @@
                                 <li><a href="<?= base_url('amis') ?>">Mes amis</a></li>
                                 <li><a href="<?= base_url('user/mesInformations') ?>">Mes informations</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#">Paramètres</a></li>
+                                <li><a href="<?= base_url('user/parametres') ?>">Paramètres</a></li>
                                 <li><a href="<?= base_url('user/deconnexion') ?>">Déconnexion</a></li>
                             </ul>
                         </li>

@@ -8,7 +8,7 @@ class User_model extends CI_Model {
     }
 
     public function connexion($login, $password) {
-        $cypher = "MATCH(user:USER) WHERE user.login = '$login' AND user.password = '$password' RETURN user.login";
+        $cypher = "MATCH(user:USER) WHERE user.login = '$login' AND user.password = '$password' RETURN {login:user.login, couleurSite:user.couleurSite, couleurTexte:user.couleurTexte, fondSite:user.fondSite}";
         return $this->neo->execute_query($cypher);
     }
 
@@ -25,6 +25,23 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher);
 
         return true;
+    }
+
+    public function check_si_email_existe($email) {
+        $cypher = "MATCH(user:USER) WHERE user.email = '$email' RETURN user.email";
+        $existeDeja = $this->neo->execute_query($cypher);
+
+        if (isset($existeDeja[0])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function updateParametresCosmetiques($login, $couleurSite, $couleurTexte, $fondSite) {
+        $cypher = "MATCH(user:USER) WHERE user.login = '$login' "
+                . "SET user.couleurSite = '$couleurSite', user.couleurTexte = '$couleurTexte', user.fondSite = '$fondSite'";
+        $this->neo->execute_query($cypher);
     }
 
 }
