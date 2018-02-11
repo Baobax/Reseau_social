@@ -20,8 +20,8 @@ class Amis extends CI_Controller {
         $this->load->model('amis_model');
         $amis = $this->amis_model->getListeAmis($this->session->userdata('user_login'));
         $demandesAmisRecues = $this->amis_model->getDemandesAmisRecues($this->session->userdata('user_login'));
-        $demandesAmisAccepteesEtRefusees = $this->amis_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
         $etatDemandesAmis = $this->amis_model->getEtatDemandesAmis($this->session->userdata('user_login'));
+        $demandesAmisAccepteesEtRefusees = $this->amis_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
 
         $data['page_title'] = 'Amis';
         $data['amis'] = $amis;
@@ -58,7 +58,7 @@ class Amis extends CI_Controller {
         }
 
         $this->load->model('amis_model');
-        $this->amis_model->ajouter($this->session->userdata('user_login'), $loginPersonne);
+        $this->amis_model->ajouter($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
     }
@@ -69,7 +69,7 @@ class Amis extends CI_Controller {
         }
 
         $this->load->model('amis_model');
-        $this->amis_model->accepterDemande($this->session->userdata('user_login'), $loginPersonne);
+        $this->amis_model->accepterDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
     }
@@ -80,7 +80,7 @@ class Amis extends CI_Controller {
         }
 
         $this->load->model('amis_model');
-        $this->amis_model->refuserDemande($this->session->userdata('user_login'), $loginPersonne);
+        $this->amis_model->refuserDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
     }

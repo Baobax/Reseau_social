@@ -56,25 +56,39 @@ class User extends CI_Controller {
 
 
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
-        $this->form_validation->set_rules('email', 'eMail', 'required|trim|email_valide|email_inexistant');
+        //$this->form_validation->set_rules('email', 'eMail', 'required|trim|email_valide|email_inexistant');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
         $this->form_validation->set_rules('prenom', 'Prenom', 'required|trim');
         $this->form_validation->set_rules('nom', 'Nom', 'required|trim');
+        $this->form_validation->set_rules('date_naissance', 'Date de naissance', 'required|trim');
+        $this->form_validation->set_rules('genre', 'Genre', 'required|trim');
+        $this->form_validation->set_rules('annee', 'Année', 'required|trim');
+        $this->form_validation->set_rules('discipline', 'Discipline', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $login = $this->input->post('login');
-            $email = $this->input->post('email');
-            $password = hash('SHA256', $this->input->post('password'));
-            $prenom = $this->input->post('prenom');
-            $nom = $this->input->post('nom');
+            $postdata['login'] = $this->input->post('login');
+            $postdata['email'] = $this->input->post('email');
+            $postdata['password'] = hash('SHA256', $this->input->post('password'));
+            $postdata['prenom'] = $this->input->post('prenom');
+            $postdata['nom'] = $this->input->post('nom');
+            $postdata['dateNaissance'] = $this->input->post('date_naissance');
+            $postdata['genre'] = $this->input->post('genre');
+            $postdata['annee'] = $this->input->post('annee');
+            $postdata['discipline'] = $this->input->post('discipline');
+            $postdata['couleurSite'] = '#222222';
+            $postdata['couleurTexte'] = '#000000';
+            $postdata['fondSite'] = '#ffffff';
 
-            $testExistance = $this->user_model->inscription($login, $password, $nom, $prenom);
+            $testExistence = $this->user_model->inscription($postdata);
 
-            if (!$testExistance) {
+            if (!$testExistence) {
                 $this->session->set_flashdata('message', '<div>Ce login existe déjà, choisissez-en un autre.</div>');
                 redirect('user/inscription');
             } else {
-                $this->session->set_userdata('user_login', $login);
+                $this->session->set_userdata('user_login', $postdata['login']);
+                $this->session->set_userdata('couleur_site', $postdata['couleurSite']);
+                $this->session->set_userdata('couleur_texte', $postdata['couleurTexte']);
+                $this->session->set_userdata('fond_site', $postdata['fondSite']);
                 $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
 
                 redirect('user/page');
@@ -89,23 +103,23 @@ class User extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
-    function __email_valide($email) {
+    function email_valide($email) {
         $pieces = explode('@', $email);
 
-        if ($pieces[1] != 'enssat.fr') {
+        if ($pieces[1] != '@enssat.fr') {
             return false;
         } else {
             return true;
         }
     }
 
-    function __email_inexistant($email) {
+    function email_inexistant($email) {
         $this->load->model('user_model');
 
         if ($this->user_model->check_si_email_existe($email)) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -126,8 +140,10 @@ class User extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $data['page_title'] = 'Mes informations';
+        $user = $this->user_model->getMesInfos($this->session->userdata('user_login'));
 
+        $data['page_title'] = 'Mes informations';
+        $data['user'] = $user;
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/mes_informations');
@@ -162,6 +178,17 @@ class User extends CI_Controller {
         $this->load->view('layout/header', $data);
         $this->load->view('user/parametres');
         $this->load->view('layout/footer');
+    }
+
+    public function supprimerUser() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->user_model->supprimerUser($this->session->userdata('user_login'));
+
+        $this->session->unset_userdata('user_login');
+        redirect('user/connexion');
     }
 
     public function deconnexion() {

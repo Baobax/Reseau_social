@@ -19,13 +19,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="login">Login</label>
-                                <input type="text" name="login" id="login" value="<?= set_value("login") ?>" class="form-control"/>
+                                <input type="text" name="login" id="login" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="email">eMail</label>
-                                <input type="text" name="email" id="email" value="<?= set_value("email") ?>" class="form-control"/>
+                                <input type="text" name="email" id="email" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -34,13 +34,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="password">Mot de passe</label>
-                                <input type="password" name="password" id="password1" value="<?= set_value("password") ?>" class="form-control"/>
+                                <input type="password" name="password" id="password1" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="password2">Retapez votre mot de passe</label>
-                                <input type="password" name="password2" id="password2" value="<?= set_value("password2") ?>" class="form-control"/>
+                                <input type="password" name="password2" id="password2" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="prenom">Prénom</label>
-                                <input type="text" name="prenom" id="prenom" value="<?= set_value("prenom") ?>" class="form-control"/>
+                                <input type="text" name="prenom" id="prenom" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nom">Nom</label>
-                                <input type="text" name="nom" id="nom" value="<?= set_value("nom") ?>" class="form-control"/>
+                                <input type="text" name="nom" id="nom" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -66,15 +66,15 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nom">Date de naissance</label>
-                                <input type="text" placeholder="jj/mm/aaaa" name="date_naissance" id="date_naissance" value="<?= set_value("date_naissance") ?>" class="form-control"/>
+                                <input type="text" placeholder="jj/mm/aaaa" name="date_naissance" id="date_naissance" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Genre</label>
                                 <select name="genre" id="genre" class="form-control">
-                                    <option>Homme</option>
-                                    <option>Femme</option>
+                                    <option value="homme">Homme</option>
+                                    <option value="femme">Femme</option>
                                 </select>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                             <div class="form-group">
                                 <label>Discipline</label>
                                 <select name="discipline" id="discipline" class="form-control">
-                                    <option value="electronique">&Eacute;lectronique</option>
+                                    <option value="électronique">&Eacute;lectronique</option>
                                     <option value="informatique">Informatique</option>
                                     <option value="photonique">Photonique</option>
                                     <option value="imr">Informatique, Multimédia et Réseaux</option>
@@ -108,9 +108,7 @@
 
                     <br><br>
 
-                    <div class="form-group">
-                        <button  class="bouton_lien">Valider</button>
-                    </div>
+                    <input type="submit" value="S\'inscrire">
 
                     <?= form_close() ?>
                 </div>

@@ -8,7 +8,6 @@ class Amis_model extends CI_Model {
     }
 
     public function getListeAmis($monLogin) {
-        $cypher = "MATCH(user:USER) WHERE user.login <> '$monLogin' RETURN user.login";
         $cypher = "MATCH (user1:USER)-[ami:AMI]-(user2:USER) "
                 . "WHERE user1.login = '$monLogin' "
                 . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
@@ -47,10 +46,11 @@ class Amis_model extends CI_Model {
         return $query;
     }
 
-    public function getResultatRecherche($monLogin, $personne) {
+    public function getResultatRecherche($monLogin, $recherche) {
+        //Recherche pour une personne dont le om ou prénom commence par la recherche
         $cypher = "MATCH(user:USER) "
-                . "WHERE user.login <> '$monLogin' AND (user.prenom = '$personne' OR user.nom = '$personne') "
-                . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom}";
+                . "WHERE user.login <> '$monLogin' AND (user.prenom =~ '$recherche.*' OR user.nom =~ '$recherche.*') "
+                . "RETURN DISTINCT {login:user.login, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
 
@@ -70,7 +70,7 @@ class Amis_model extends CI_Model {
 
         //Passage de l'état de la demande d'ami à acceptée
         $cypher = "MATCH (user1:USER)-[demandeami:DEMANDEAMI]->(user2:USER) "
-                . "WHERE user1.login = '$loginAmi' "
+                . "WHERE user1.login = '$loginAmi' AND user2.login = '$loginMoi' "
                 . "SET demandeami.etatDemande = 'acceptée'";
         $this->neo->execute_query($cypher);
     }

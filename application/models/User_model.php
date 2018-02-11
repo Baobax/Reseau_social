@@ -12,8 +12,10 @@ class User_model extends CI_Model {
         return $this->neo->execute_query($cypher);
     }
 
-    public function inscription($login, $password, $nom, $prenom) {
-        $cypherTest = "MATCH(user:USER) WHERE user.login = '$login' RETURN user.login";
+    public function inscription($postdata) {
+        $cypherTest = "MATCH(user:USER) "
+                . "WHERE user.login = '" . $postdata['login'] . "' "
+                . "RETURN user.login";
         $existeDeja = $this->neo->execute_query($cypherTest);
 
         if (isset($existeDeja[0])) {
@@ -21,7 +23,12 @@ class User_model extends CI_Model {
         }
 
 
-        $cypher = "CREATE(user:USER{login: '$login', password: '$password', prenom: '$prenom', nom: '$nom'})";
+        $cypher = "CREATE(user:USER{login: '" . $postdata['login'] . "', password: '" . $postdata['password'] . "', "
+                . "prenom: '" . $postdata['prenom'] . "', nom: '" . $postdata['nom'] . "', "
+                . "email: '" . $postdata['email'] . "', dateNaissance: '" . $postdata['dateNaissance'] . "', "
+                . "genre: '" . $postdata['genre'] . "', annee: '" . $postdata['annee'] . "', "
+                . "discipline: '" . $postdata['discipline'] . "', couleurSite: '" . $postdata['couleurSite'] . "', "
+                . "couleurTexte: '" . $postdata['couleurTexte'] . "', fondSite: '" . $postdata['fondSite'] . "'})";
         $this->neo->execute_query($cypher);
 
         return true;
@@ -38,9 +45,24 @@ class User_model extends CI_Model {
         }
     }
 
+    public function getMesInfos($monLogin) {
+        $cypher = "MATCH(user:USER) "
+                . "WHERE user.login = '$monLogin' "
+                . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom}";
+        return $this->neo->execute_query($cypher);
+    }
+
     public function updateParametresCosmetiques($login, $couleurSite, $couleurTexte, $fondSite) {
-        $cypher = "MATCH(user:USER) WHERE user.login = '$login' "
+        $cypher = "MATCH(user:USER) "
+                . "WHERE user.login = '$login' "
                 . "SET user.couleurSite = '$couleurSite', user.couleurTexte = '$couleurTexte', user.fondSite = '$fondSite'";
+        $this->neo->execute_query($cypher);
+    }
+
+    public function supprimerUser($login) {
+        $cypher = "MATCH(user:USER) "
+                . "WHERE user.login = '$login' "
+                . "DETACH DELETE user";
         $this->neo->execute_query($cypher);
     }
 
