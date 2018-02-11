@@ -68,7 +68,6 @@ class Groupes extends CI_Controller {
 
             $groupe = $this->groupes_model->verifExistenceNom($label);
 
-            //si $user[0] existe, cela veut dire que la personne existe bien et a rentré les bons identifiants
             if (!isset($groupe[0])) {
                 $this->groupes_model->creerGroupe($this->session->userdata('user_login'), $label, $configuration);
                 $this->session->set_flashdata('message', '<div class="alert alert-success">Le groupe a bien été créé.</div>');

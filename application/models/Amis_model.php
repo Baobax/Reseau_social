@@ -47,10 +47,10 @@ class Amis_model extends CI_Model {
     }
 
     public function getResultatRecherche($monLogin, $recherche) {
-        //Recherche pour une personne dont le om ou prénom commence par la recherche
-        $cypher = "MATCH(user:USER) "
-                . "WHERE user.login <> '$monLogin' AND (user.prenom =~ '$recherche.*' OR user.nom =~ '$recherche.*') "
-                . "RETURN DISTINCT {login:user.login, prenom:user.prenom, nom:user.nom}";
+        //Recherche pour une personne dont le nom ou prénom commence par la recherche
+        $cypher = "MATCH (user:USER) "
+                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:AMI]-(user)) AND (user.prenom =~ '$recherche.*' OR user.nom =~ '$recherche.*') "
+                . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
 
@@ -81,6 +81,13 @@ class Amis_model extends CI_Model {
                 . "WHERE user1.login = '$loginAmi' "
                 . "SET demandeami.etatDemande = 'rejetée'";
         $this->neo->execute_query($cypher);
+    }
+
+    public function rechercherAmiPourInviterEvenement($monLogin, $recherche) {
+        $cypher = "MATCH (user1:USER)-[ami:AMI]-(user2:USER) "
+                . "WHERE user1.login = '$monLogin' AND (user2.prenom =~ '$recherche.*' OR user2.nom =~ '$recherche.*') "
+                . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
+        return $this->neo->execute_query($cypher);
     }
 
 }
