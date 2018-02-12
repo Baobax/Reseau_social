@@ -180,6 +180,94 @@ class User extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
+    public function publierTexte() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->form_validation->set_rules('texte', 'Texte', 'required|trim');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $texte = $this->input->post('texte');
+            $typePublication = "texte";
+
+            $this->user_model->publierTexte($this->session->userdata('user_login'), $texte, $typePublication);
+        }
+
+        redirect('user/page');
+    }
+
+    public function publierVideo() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->form_validation->set_rules('lien', 'Lien', 'required|trim');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $lienVideo = $this->input->post('lien');
+            $typePublication = "video";
+
+            $this->user_model->publierVideo($this->session->userdata('user_login'), $lienVideo, $typePublication);
+        }
+
+        redirect('user/page');
+    }
+
+    public function publierImage() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->form_validation->set_rules('legende', 'Légende', 'required|trim');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $legende = $this->input->post('legende');
+            $typePublication = "image";
+
+            $file = $this->_file_upload('fichier');
+            if ($file === 2) {
+                $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : gif, jpg, jpeg et png</div>");
+            } else if ($file === false) {
+                $this->session->set_flashdata('message', "<div class='alert alert-danger'>Le champ fichier est requis</div>");
+            } else {
+                $cheminImage = $file['file_name'];
+                $this->user_model->publierImage($this->session->userdata('user_login'), $cheminImage, $legende, $typePublication);
+                $this->session->set_flashdata('message', "<div class='alert alert-success'>L\'image a été ajoutée avec succès</div>");
+            }
+        }
+
+        redirect('user/page');
+    }
+
+    public function _file_upload($file) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        if ($_FILES[$file]['name'] != "") {
+            $this->load->helper("text");
+            $tampon = explode('.', $_FILES[$file]['name']);
+            $filename = convert_accented_characters($tampon[0]);
+            $config['file_name'] = url_title($filename, "_", true);
+            $config['upload_path'] = "uploads/" . $this->session->userdata('user_login');
+            $config['allowed_types'] = 'gif|jpg|jpeg|png';
+
+            if (!file_exists('uploads/' . $this->session->userdata('user_login'))) {
+                mkdir('uploads/' . $this->session->userdata('user_login'), 0777, true);
+            }
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload($file)) {
+                return 2;
+            } else {
+                return $this->upload->data();
+            }
+        }
+        return false;
+    }
+
     public function supprimerUser() {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');

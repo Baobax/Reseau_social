@@ -59,6 +59,27 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher);
     }
 
+    public function publierTexte($monLogin, $texte, $typePublication) {
+        $cypher = "MATCH (user:USER) "
+                . "WHERE user.login = '$monLogin' "
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$texte', type:'$typePublication'})";
+        $this->neo->execute_query($cypher);
+    }
+
+    public function publierVideo($monLogin, $lienVideo, $typePublication) {
+        $cypher = "MATCH (user:USER) "
+                . "WHERE user.login = '$monLogin' "
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienVideo', type:'$typePublication'})";
+        $this->neo->execute_query($cypher);
+    }
+
+    public function publierImage($monLogin, $lienVideo, $legende, $typePublication) {
+        $cypher = "MATCH (user:USER) "
+                . "WHERE user.login = '$monLogin' "
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienVideo', legende:'$legende', type:'$typePublication'})";
+        $this->neo->execute_query($cypher);
+    }
+
     public function supprimerUser($login) {
         $cypher = "MATCH(user:USER) "
                 . "WHERE user.login = '$login' "
