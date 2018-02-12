@@ -49,7 +49,10 @@ class Amis_model extends CI_Model {
     public function getResultatRecherche($monLogin, $recherche) {
         //Recherche pour une personne dont le nom ou prénom commence par la recherche
         $cypher = "MATCH (user:USER) "
-                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:AMI]-(user)) AND (user.prenom =~ '$recherche.*' OR user.nom =~ '$recherche.*') "
+                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:AMI]-(user)) "
+                . "AND NOT EXISTS ((:USER{login:'$monLogin'})-[:DEMANDEAMI]-(user)) "
+                . "AND user.login <> '$monLogin' "
+                . "AND (user.prenom =~ '$recherche.*' OR user.nom =~ '$recherche.*') "
                 . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
@@ -88,6 +91,20 @@ class Amis_model extends CI_Model {
                 . "WHERE user1.login = '$monLogin' AND (user2.prenom =~ '$recherche.*' OR user2.nom =~ '$recherche.*') "
                 . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
         return $this->neo->execute_query($cypher);
+    }
+
+    public function aimerPublication($monLogin, $idPublication) {
+        $cypher = "MATCH (user:USER), (publication:PUBLICATION) "
+                . "WHERE ID(publication) = $idPublication AND user.login = '$monLogin' "
+                . "CREATE UNIQUE (user)-[:AIME]->(publication)";
+        $this->neo->execute_query($cypher);
+    }
+
+    public function commenterPublication($monLogin, $idPublication, $commentaire) {
+        $cypher = "MATCH (user:USER), (publication:PUBLICATION) "
+                . "WHERE ID(publication) = $idPublication AND user.login = '$monLogin' "
+                . "CREATE (user)-[:COMMENTAIRE{commentaire:'$commentaire'}]->(publication)";
+        $this->neo->execute_query($cypher);
     }
 
 }

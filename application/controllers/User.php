@@ -251,11 +251,11 @@ class User extends CI_Controller {
             $tampon = explode('.', $_FILES[$file]['name']);
             $filename = convert_accented_characters($tampon[0]);
             $config['file_name'] = url_title($filename, "_", true);
-            $config['upload_path'] = "uploads/" . $this->session->userdata('user_login');
+            $config['upload_path'] = "assets/uploads/" . $this->session->userdata('user_login');
             $config['allowed_types'] = 'gif|jpg|jpeg|png';
 
-            if (!file_exists('uploads/' . $this->session->userdata('user_login'))) {
-                mkdir('uploads/' . $this->session->userdata('user_login'), 0777, true);
+            if (!file_exists('assets/uploads/' . $this->session->userdata('user_login'))) {
+                mkdir('assets/uploads/' . $this->session->userdata('user_login'), 0777, true);
             }
 
             $this->load->library('upload', $config);
@@ -267,6 +267,21 @@ class User extends CI_Controller {
             }
         }
         return false;
+    }
+
+    public function voirCommentaires($idPublication) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+
+        $data['page_title'] = 'Commentaires';
+        $data['publication'] = $this->user_model->getPublication($this->session->userdata('user_login'), urldecode($idPublication));
+        $data['commentaires'] = $this->user_model->getCommentairesPublication(urldecode($idPublication));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('user/publication');
+        $this->load->view('layout/footer');
     }
 
     public function supprimerUser() {

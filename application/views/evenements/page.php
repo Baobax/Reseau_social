@@ -4,6 +4,9 @@
             <div class="col-sm-6">
                 <h3><?= $evenement[0][0]['nom'] ?></h3>
                 <hr>
+                <a href="<?= base_url('evenements/nePlusParticiper/') . $evenement[0][0]['nom'] ?>" OnClick="return confirm('Voulez-vous vraiment ne plus participer à cet événement ?');">Ne plus participer</a>
+                <br>
+                <br>
                 <table>
                     <tr>
                         <td>Type d'événement</td>
@@ -11,7 +14,12 @@
                     </tr>
                     <tr>
                         <td>Date</td>
-                        <td><?= $evenement[0][0]['date'] ?></td>
+                        <td>
+                            <?php
+                            $dateTmp = explode('/', $evenement[0][0]['date']);
+                            $date = $dateTmp[2] . '/' . $dateTmp[1] . '/' . $dateTmp[0];
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>Lieu</td>

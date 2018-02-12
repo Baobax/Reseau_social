@@ -8,9 +8,8 @@
 
                         <hr>
 
-                        <div class="alert alert-danger">
-                            <?= validation_errors(); ?>
-                        </div>
+
+                        <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
 
                         <?= $this->session->flashdata("message"); ?>
 
@@ -35,8 +34,6 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Mes groupes</h2>
-                        <hr>
                         <?php foreach ($demandesAccepteesEtRefusees as $groupe) : ?>
                             <?php if ($groupe[0]['etatDemande'] == 'acceptée') : ?>
                                 <div class="alert alert-success"><?= 'Vous avez été accepté dans le groupe ' . $groupe[0]['label'] ?></div>
@@ -44,17 +41,27 @@
                                 <div class="alert alert-danger"><?= 'Vous n\'avez pas été accepté dans le groupe ' . $groupe[0]['label'] ?></div>
                             <?php endif; ?>
                         <?php endforeach; ?>
-                        <h3>Mes groupes</h3>
+                        <h3>Les groupes où je suis admin</h3>
+                        <hr>
                         <ul>
-                            <?php foreach ($groupesAdmin as $groupe) : ?>
-                                <li><?= '<a href="' . base_url('groupes/page/') . $groupe['label'] . '">' . $groupe['label'] . '</a>' ?></li>
-                            <?php endforeach; ?>
+                            <?php if (isset($groupesAdmin[0])) : ?>
+                                <?php foreach ($groupesAdmin as $groupe) : ?>
+                                    <li><?= '<a href="' . base_url('groupes/page/') . $groupe['label'] . '">' . $groupe['label'] . '</a>' ?></li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucun groupe</li>
+                            <?php endif ?>
                         </ul>
-                        <h3>Les groupes dans lesquels je suis</h3>
+                        <h3>Les groupes où je suis membre</h3>
+                        <hr>
                         <ul>
-                            <?php foreach ($groupesMembre as $groupe) : ?>
-                                <li><?= '<a href="' . base_url('groupes/page/') . $groupe['label'] . '">' . $groupe['label'] . '</a>' ?></li>
-                            <?php endforeach; ?>
+                            <?php if (isset($groupesMembre[0])) : ?>
+                                <?php foreach ($groupesMembre as $groupe) : ?>
+                                    <li><?= '<a href="' . base_url('groupes/page/') . $groupe['label'] . '">' . $groupe['label'] . '</a>' ?></li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucun groupe</li>
+                            <?php endif ?>
                         </ul>
                     </div>
                 </div>
@@ -93,11 +100,15 @@
 
                         <hr>
 
-                        <?php foreach ($demandesIntegration as $demande) : ?>
-                            <?= $demande[0]['prenom'] . ' ' . $demande[0]['nom'] . ' souhaite rejoindre le groupe ' . $demande[0]['label'] ?>
-                            <a href="<?= base_url('groupes/refuserDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
-                            <a href="<?= base_url('groupes/accepterDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
-                        <?php endforeach; ?>
+                        <?php if (isset($demandesIntegration[0])) : ?>
+                            <?php foreach ($demandesIntegration as $demande) : ?>
+                                <?= $demande[0]['prenom'] . ' ' . $demande[0]['nom'] . ' souhaite rejoindre le groupe ' . $demande[0]['label'] ?>
+                                <a href="<?= base_url('groupes/refuserDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
+                                <a href="<?= base_url('groupes/accepterDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            Aucune demande
+                        <?php endif ?>
                     </div>
                 </div>
 
@@ -108,9 +119,13 @@
                         <hr>
 
                         <ul>
-                            <?php foreach ($etatDemandesGroupes as $groupe) : ?>
-                                <li><?= $groupe[0]['label'] . ' : demande ' . $groupe[0]['etatDemande'] ?></li>
-                            <?php endforeach; ?>
+                            <?php if (isset($etatDemandesGroupes[0])) : ?>
+                                <?php foreach ($etatDemandesGroupes as $groupe) : ?>
+                                    <li><?= $groupe[0]['label'] . ' : demande ' . $groupe[0]['etatDemande'] ?></li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucune demande</li>
+                            <?php endif ?>
                         </ul>
                     </div>
                 </div>

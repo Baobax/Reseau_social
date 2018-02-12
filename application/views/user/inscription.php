@@ -7,9 +7,7 @@
 
                     <hr>
 
-                    <div class="alert alert-danger">
-                        <?= validation_errors(); ?>
-                    </div>
+                    <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
 
                     <?= $this->session->flashdata("message"); ?>
 
@@ -31,16 +29,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="password">Mot de passe</label>
-                                <input type="password" name="password" id="password1" class="form-control"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="password2">Retapez votre mot de passe</label>
-                                <input type="password" name="password2" id="password2" class="form-control"/>
+                                <input type="password" name="password" id="password" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -65,8 +57,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nom">Date de naissance</label>
-                                <input type="text" placeholder="jj/mm/aaaa" name="date_naissance" id="date_naissance" class="form-control"/>
+                                <label for="date_naissance">Date de naissance</label>
+                                <input type="text" name="date_naissance" id="date_naissance"    class="form-control" readonly="true"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -106,9 +98,9 @@
                         </div>
                     </div>
 
-                    <br><br>
+                    <br>
 
-                    <input type="submit" value="S\'inscrire">
+                    <input type="submit" value="S'inscrire">
 
                     <?= form_close() ?>
                 </div>
@@ -116,3 +108,21 @@
         </div>
     </div>
 </div>
+
+<!--Plugin bootstrap qui permet de rentrer une date grâce à un calendrier-->
+<script type="text/javascript">
+    $(function () {
+        var date_input = $('#date_naissance');
+        var options = {
+            daysOfWeekDisabled: false,
+            orientation: 'left top',
+            format: 'dd/mm/yyyy',
+            language: 'fr',
+            startView: 'decade',
+            todayHighlight: true,
+            clearBtn: true,
+            autoclose: true
+        };
+        date_input.datepicker(options);
+    });
+</script>

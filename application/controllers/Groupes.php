@@ -77,7 +77,16 @@ class Groupes extends CI_Controller {
         }
 
 
-        redirect('groupes/afficher');
+        $data['page_title'] = 'Mes groupes';
+        $data['groupesAdmin'] = $this->groupes_model->getGroupesAdmin($this->session->userdata('user_login'));
+        $data['groupesMembre'] = $this->groupes_model->getGroupesMembre($this->session->userdata('user_login'));
+        $data['demandesIntegration'] = $this->groupes_model->getDemandesIntegration($this->session->userdata('user_login'));
+        $data['etatDemandesGroupes'] = $this->groupes_model->getEtatDemandes($this->session->userdata('user_login'));
+        $data['demandesAccepteesEtRefusees'] = $this->groupes_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('groupes/afficher');
+        $this->load->view('layout/footer');
     }
 
     public function rechercher() {
@@ -88,17 +97,21 @@ class Groupes extends CI_Controller {
         $recherche = $this->input->post('nom');
         $resultat = $this->groupes_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
 
-        $return[] = '<ul>';
-        foreach ($resultat as $groupe) {
-            if ($groupe[0]['configuration'] == 'ouvert') {
-                $return[] = '<li>' . $groupe[0]['label'] . ' (groupe ouvert) <a href="' . base_url('groupes/rejoindre/') . $groupe[0]['label'] . '" title="Rejoindre"><i class="fa fa-plus"></i></a></li>';
-            } else {
-                $return[] = '<li>' . $groupe[0]['label'] . ' (groupe fermé) <a href="' . base_url('groupes/envoyerDemande/') . $groupe[0]['label'] . '" title="Envoyer une demande"><i class="fa fa-plus"></i></a></li>';
+        if (isset($resultat[0])) {
+            $return[] = '<ul>';
+            foreach ($resultat as $groupe) {
+                if ($groupe[0]['configuration'] == 'ouvert') {
+                    $return[] = '<li>' . $groupe[0]['label'] . ' (groupe ouvert) <a href="' . base_url('groupes/rejoindre/') . $groupe[0]['label'] . '" title="Rejoindre"><i class="fa fa-plus"></i></a></li>';
+                } else {
+                    $return[] = '<li>' . $groupe[0]['label'] . ' (groupe fermé) <a href="' . base_url('groupes/envoyerDemande/') . $groupe[0]['label'] . '" title="Envoyer une demande"><i class="fa fa-plus"></i></a></li>';
+                }
             }
-        }
-        $return[] = '</ul>';
+            $return[] = '</ul>';
 
-        echo json_encode($return);
+            echo json_encode($return);
+        } else {
+            echo json_encode('Pas de résultat');
+        }
     }
 
     public function rejoindre($labelGroupe) {

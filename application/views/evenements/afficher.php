@@ -8,9 +8,7 @@
 
                         <hr>
 
-                        <div class="alert alert-danger">
-                            <?= validation_errors(); ?>
-                        </div>
+                        <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
 
                         <?= $this->session->flashdata("message"); ?>
 
@@ -30,7 +28,7 @@
 
                         <div class="form-group">
                             <label for="date">Date</label>
-                            <input type="text" name="date" id="date" class="form-control"/>
+                            <input type="text" name="date" id="date" class="form-control" readonly="true"/>
                         </div>
 
                         <div class="form-group">
@@ -48,9 +46,13 @@
                         <h3>Les événements auxquels je participe</h3>
                         <hr>
                         <ul>
-                            <?php foreach ($evenements as $evenement) : ?>
-                                <li><?= '<a href="' . base_url('evenements/page/') . $evenement['nom'] . '">' . $evenement['nom'] . '</a>' ?></li>
-                            <?php endforeach; ?>
+                            <?php if (isset($evenements[0])) : ?>
+                                <?php foreach ($evenements as $evenement) : ?>
+                                    <li><?= '<a href="' . base_url('evenements/page/') . $evenement['nom'] . '">' . $evenement['nom'] . '</a>' ?></li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucun événement</li>
+                            <?php endif ?>
                         </ul>
                     </div>
                 </div>
@@ -61,13 +63,17 @@
                         <h3>&Eacute;vénements auxquels je suis invité à participer</h3>
                         <hr>
                         <ul>
-                            <?php foreach ($evenementsInvite as $invitation) : ?>
-                                <li>
-                                    <?= $invitation['nomEvenement'] ?>
-                                    <a href="<?= base_url('evenements/refuserInvitation/') . $invitation['nomEvenement'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
-                                    <a href="<?= base_url('evenements/accepterInvitation/') . $invitation['nomEvenement'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
-                                </li>
-                            <?php endforeach; ?>
+                            <?php if (isset($evenementsInvite[0])) : ?>
+                                <?php foreach ($evenementsInvite as $invitation) : ?>
+                                    <li>
+                                        <?= $invitation['nomEvenement'] ?>
+                                        <a href="<?= base_url('evenements/refuserInvitation/') . $invitation['nomEvenement'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
+                                        <a href="<?= base_url('evenements/accepterInvitation/') . $invitation['nomEvenement'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucun événement</li>
+                            <?php endif ?>
                         </ul>
                     </div>
                 </div>
@@ -123,5 +129,23 @@
                 }
             });
         });
+    });
+</script>
+
+
+<!--Plugin bootstrap qui permet de rentrer une date grâce à un calendrier-->
+<script type="text/javascript">
+    $(function () {
+        var date_input = $('#date');
+        var options = {
+            daysOfWeekDisabled: false,
+            orientation: 'left top',
+            format: 'dd/mm/yyyy',
+            language: 'fr',
+            todayHighlight: true,
+            clearBtn: true,
+            autoclose: true
+        };
+        date_input.datepicker(options);
     });
 </script>

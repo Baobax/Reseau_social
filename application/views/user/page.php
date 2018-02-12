@@ -37,7 +37,7 @@
                     <div class="col-md-4 col-sm-6">
                         <?= form_open('user/publierVideo') ?>
                         <div class="form-group">
-                            <label for="lien">Publier une vidéo YouTube grâce à un lien de partage</label>
+                            <label for="lien">Publier une vidéo YouTube grâce à une balise iFrame</label>
                             <textarea rows="3" name="lien" id="lien" class="form-control"></textarea>
                         </div>
 
@@ -54,15 +54,19 @@
                 <h3>Mon activité</h3>
                 <hr>
                 <?php foreach ($publications as $publication) : ?>
-                    <?php if ($publication[0]['type'] == 'video') : ?>
-                        <iframe width="100" height="200" src="<?= $publication[0]['content'] ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        <?= $publication[0]['legende'] ?>
-                    <?php elseif ($publication[0]['type'] == 'image') : ?>
-                        <?= $publication[0]['content'] ?>
-                    <?php else : ?>
-                        <?= $publication[0]['content'] ?>
-                    <?php endif; ?>
-                    <br>
+                    <div class="publication">
+                        <?php if ($publication[0]['type'] == 'video') : ?>
+                            <?= $publication[0]['content'] ?>
+                            <?= $publication[0]['legende'] ?>
+                        <?php elseif ($publication[0]['type'] == 'image') : ?>
+                            <figure><img src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
+                            <figcaption><?= $publication[0]['legende'] ?></figcaption>
+                        <?php else : ?>
+                            <?= $publication[0]['content'] ?>
+                        <?php endif; ?>
+
+                        <a href="<?= base_url('user/voirCommentaires/' . $publication[0]['id']) ?>">Voir les commentaires <i class="fa fa-comment"></i></a>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>

@@ -6,6 +6,7 @@ class Amis extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('amis_model');
     }
 
     public function index() {
@@ -17,7 +18,6 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->load->model('amis_model');
         $amis = $this->amis_model->getListeAmis($this->session->userdata('user_login'));
         $demandesAmisRecues = $this->amis_model->getDemandesAmisRecues($this->session->userdata('user_login'));
         $etatDemandesAmis = $this->amis_model->getEtatDemandesAmis($this->session->userdata('user_login'));
@@ -53,17 +53,20 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->load->model('amis_model');
         $recherche = $this->input->post('personne');
         $resultat = $this->amis_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
 
-        $return[] = '<ul>';
-        foreach ($resultat as $personne) {
-            $return[] = '<li><a href="' . base_url('amis/ajouter/') . $personne[0]['login'] . '">' . $personne[0]['prenom'] . ' ' . $personne[0]['nom'] . '<i class="fa fa-user-plus"></i></a></li>';
-        }
-        $return[] = '</ul>';
+        if (isset($resultat[0])) {
+            $return[] = '<ul>';
+            foreach ($resultat as $personne) {
+                $return[] = '<li><a href="' . base_url('amis/ajouter/') . $personne[0]['login'] . '">' . $personne[0]['prenom'] . ' ' . $personne[0]['nom'] . '<i class="fa fa-user-plus"></i></a></li>';
+            }
+            $return[] = '</ul>';
 
-        echo json_encode($return);
+            echo json_encode($return);
+        } else {
+            echo json_encode('Pas de résultat');
+        }
     }
 
     public function ajouter($loginPersonne) {
@@ -71,7 +74,6 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->load->model('amis_model');
         $this->amis_model->ajouter($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
@@ -82,7 +84,6 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->load->model('amis_model');
         $this->amis_model->accepterDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
@@ -93,10 +94,19 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->load->model('amis_model');
         $this->amis_model->refuserDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
 
         redirect('amis/afficher');
+    }
+
+    public function aimerPublication($idPublication, $loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->amis_model->aimerPublication($this->session->userdata('user_login'), urldecode($idPublication));
+
+        redirect('amis/page/' . urldecode($loginAmi));
     }
 
 }

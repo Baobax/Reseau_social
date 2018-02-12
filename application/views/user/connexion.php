@@ -7,9 +7,8 @@
 
                     <hr>
 
-                    <div class="alert alert-danger">
-                        <?= validation_errors(); ?>
-                    </div>
+                    <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
+
                     <?= $this->session->flashdata("message"); ?>
 
                     <?= form_open() ?>
@@ -24,9 +23,9 @@
                         <input type="password" name="password" id="password" value="<?= set_value("password") ?>" class="form-control"/>
                     </div>
 
-                    <div class="form-group">
-                        <button  class="bouton_lien">Valider</button>
-                    </div>
+                    <br>
+
+                    <input type="submit" value="S'inscrire">
 
                     <?= form_close() ?>
                 </div>

@@ -12,9 +12,13 @@
                     <?php endif; ?>
                 <?php endforeach; ?>
                 <ul>
-                    <?php foreach ($amis as $ami) : ?>
-                        <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a></li>
-                    <?php endforeach; ?>
+                    <?php if (isset($amis[0])) : ?>
+                        <?php foreach ($amis as $ami) : ?>
+                            <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a></li>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <li>Je n'ai pas d'ami :(</li>
+                    <?php endif ?>
                 </ul>
             </div>
             <div class="col-sm-6">
@@ -52,11 +56,19 @@
 
                         <hr>
 
-                        <?php foreach ($demandesAmis as $personne) : ?>
-                            <?= $personne[0]['prenom'] . ' ' . $personne[0]['nom'] ?>
-                            <a href="<?= base_url('amis/refuserDemande/') . $personne[0]['login'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
-                            <a href="<?= base_url('amis/accepterDemande/') . $personne[0]['login'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
-                        <?php endforeach; ?>
+                        <ul>
+                            <?php if (isset($demandesAmis[0])) : ?>
+                                <?php foreach ($demandesAmis as $personne) : ?>
+                                    <li>
+                                        <?= $personne[0]['prenom'] . ' ' . $personne[0]['nom'] ?>
+                                        <a href="<?= base_url('amis/refuserDemande/') . $personne[0]['login'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
+                                        <a href="<?= base_url('amis/accepterDemande/') . $personne[0]['login'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucune demande</li>
+                            <?php endif ?>
+                        </ul>
                     </div>
                 </div>
 
@@ -67,9 +79,13 @@
                         <hr>
 
                         <ul>
-                            <?php foreach ($etatDemandesAmis as $personne) : ?>
-                                <li><?= $personne[0]['prenom'] . ' ' . $personne[0]['nom'] . ' : demande ' . $personne[0]['etatDemande'] ?></li>
-                            <?php endforeach; ?>
+                            <?php if (isset($etatDemandesAmis[0])) : ?>
+                                <?php foreach ($etatDemandesAmis as $personne) : ?>
+                                    <li><?= $personne[0]['prenom'] . ' ' . $personne[0]['nom'] . ' : demande ' . $personne[0]['etatDemande'] ?></li>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <li>Aucune demande</li>
+                            <?php endif ?>
                         </ul>
                     </div>
                 </div>

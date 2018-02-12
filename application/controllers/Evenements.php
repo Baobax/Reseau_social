@@ -28,6 +28,11 @@ class Evenements extends CI_Controller {
     }
 
     public function creerEvenement() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+
         $this->form_validation->set_rules('nom', 'Nom', 'required|trim');
         $this->form_validation->set_rules('type', 'Type', 'required|trim');
         $this->form_validation->set_rules('date', 'Date', 'required|trim');
@@ -36,21 +41,30 @@ class Evenements extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $nom = $this->input->post('nom');
             $type = $this->input->post('type');
-            $date = $this->input->post('date');
-            $lieu = $this->input->post('lieu');
 
+            //Formatage de la date pour la BD, ce qui permettra de supprimer l'événement si sa date est dépassée
+            //Passage de d/m/Y à Y/m/d
+            $dateTmp = explode('/', $this->input->post('date'));
+            $date = $dateTmp[2] . '/' . $dateTmp[1] . '/' . $dateTmp[0];
+
+            $lieu = $this->input->post('lieu');
             $evenement = $this->evenements_model->verifExistenceNom($nom);
 
             if (!isset($evenement[0])) {
-                $this->evenements_model->creerEvenement($nom, $type, $date, $lieu);
+                $this->evenements_model->creerEvenement($this->session->userdata('user_login'), $nom, $type, $date, $lieu);
                 $this->session->set_flashdata('message', '<div class="alert alert-success">L\'événement a bien été créé.</div>');
             } else {
                 $this->session->set_flashdata('message', '<div class="alert alert-danger">Ce nom d\'événement existe déjà.</div>');
             }
         }
 
+        $data['page_title'] = 'Mes événements';
+        $data['evenements'] = $this->evenements_model->getEvenementsParticipe($this->session->userdata('user_login'));
+        $data['evenementsInvite'] = $this->evenements_model->getEvenementsInvite($this->session->userdata('user_login'));
 
-        redirect('evenements/afficher');
+        $this->load->view('layout/header', $data);
+        $this->load->view('evenements/afficher');
+        $this->load->view('layout/footer');
     }
 
     public function rechercher() {
@@ -61,13 +75,17 @@ class Evenements extends CI_Controller {
         $recherche = $this->input->post('nom');
         $resultat = $this->evenements_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
 
-        $return[] = '<ul>';
-        foreach ($resultat as $evenement) {
-            $return[] = '<li>' . $evenement['label'] . '<a href="' . base_url('evenements/participer/') . $evenement['nom'] . '" title="Rejoindre"> <i class="fa fa-plus"></i></a></li>';
-        }
-        $return[] = '</ul>';
+        if (isset($resultat[0])) {
+            $return[] = '<ul>';
+            foreach ($resultat as $evenement) {
+                $return[] = '<li>' . $evenement['label'] . '<a href="' . base_url('evenements/participer/') . $evenement['nom'] . '" title="Rejoindre"> <i class="fa fa-plus"></i></a></li>';
+            }
+            $return[] = '</ul>';
 
-        echo json_encode($return);
+            echo json_encode($return);
+        } else {
+            echo json_encode('Pas de résultat');
+        }
     }
 
     public function participer($nom) {
@@ -76,6 +94,16 @@ class Evenements extends CI_Controller {
         }
 
         $this->evenements_model->participerEvenement($this->session->userdata('user_login'), urldecode($nom));
+
+        redirect('evenements/afficher');
+    }
+
+    public function nePlusParticiper($nom) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->evenements_model->nePlusParticiperEvenement($this->session->userdata('user_login'), urldecode($nom));
 
         redirect('evenements/afficher');
     }

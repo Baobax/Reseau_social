@@ -81,7 +81,9 @@ class Groupes_model extends CI_Model {
     public function getResultatRecherche($monLogin, $recherche) {
         //Recherche pour une personne dont le om ou prénom commence par la recherche
         $cypher = "MATCH (groupe:GROUPE) "
-                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:MEMBRE]->(groupe)) AND groupe.label =~ '$recherche.*' "
+                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:MEMBRE]->(groupe)) "
+                . "AND NOT EXISTS ((:USER{login:'$monLogin'})-[:DEMANDEGROUPE]->(groupe)) "
+                . "AND groupe.label =~ '$recherche.*' "
                 . "RETURN {label:groupe.label, configuration:groupe.configuration}";
         return $this->neo->execute_query($cypher);
     }
