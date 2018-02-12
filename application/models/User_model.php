@@ -80,6 +80,13 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher);
     }
 
+    public function getPublications($loginUser) {
+        $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
+                . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) "
+                . "RETURN {content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
+        return $this->neo->execute_query($cypher);
+    }
+
     public function supprimerUser($login) {
         $cypher = "MATCH(user:USER) "
                 . "WHERE user.login = '$login' "

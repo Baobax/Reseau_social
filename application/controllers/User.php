@@ -129,6 +129,7 @@ class User extends CI_Controller {
         }
 
         $data['page_title'] = 'Votre page';
+        $data['publications'] = $this->user_model->getPublications($this->session->userdata('user_login'));
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/page');
@@ -233,7 +234,7 @@ class User extends CI_Controller {
             } else {
                 $cheminImage = $file['file_name'];
                 $this->user_model->publierImage($this->session->userdata('user_login'), $cheminImage, $legende, $typePublication);
-                $this->session->set_flashdata('message', "<div class='alert alert-success'>L\'image a été ajoutée avec succès</div>");
+                $this->session->set_flashdata('message', "<div class='alert alert-success'>L'image a été ajoutée avec succès</div>");
             }
         }
 

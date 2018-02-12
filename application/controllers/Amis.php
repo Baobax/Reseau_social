@@ -34,6 +34,20 @@ class Amis extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
+    public function page($loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->load->model('user_model');
+        $data['page_title'] = 'Page';
+        $data['publications'] = $this->user_model->getPublications(urldecode($loginAmi));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('amis/page');
+        $this->load->view('layout/footer');
+    }
+
     public function rechercher() {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');

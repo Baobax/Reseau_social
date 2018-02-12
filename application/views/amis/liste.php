@@ -13,7 +13,7 @@
                 <?php endforeach; ?>
                 <ul>
                     <?php foreach ($amis as $ami) : ?>
-                        <li><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></li>
+                        <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
