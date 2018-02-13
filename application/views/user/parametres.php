@@ -18,7 +18,7 @@
                     <input type="color" id="fond_site" name="fond_site" value="<?= $this->session->userdata('fond_site'); ?>">
                 </div>
 
-                <input type="submit" value="Changer">
+                <input type="submit" class="btn" value="Changer">
                 <?= form_close() ?>
             </div>
         </div>

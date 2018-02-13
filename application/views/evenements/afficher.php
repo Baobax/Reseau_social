@@ -36,7 +36,7 @@
                             <input type="text" name="lieu" id="lieu" class="form-control"/>
                         </div>
 
-                        <input type="submit" value="Créer">
+                        <input type="submit" class="btn" value="Créer">
                         <?= form_close() ?>
                     </div>
                 </div>
@@ -82,9 +82,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h3>Rechercher un nouvel événement</h3>
-
                         <hr>
-
                         <div class="row">
                             <div class="col-sm-12">
                                 <?= form_open('', array('id' => 'form_recherche_evenement')); ?>
@@ -92,7 +90,7 @@
                                     <label for="nomEvForm2">Rechercher un événement par son nom :</label>
                                     <input type="text" class="form-control" name="nom" id="nomEvForm2">
                                     <br>
-                                    <input type="submit" value="Rechercher">
+                                    <input type="submit" class="btn" value="Rechercher">
                                 </div>
                                 <?= form_close(); ?>
                             </div>
@@ -114,20 +112,22 @@
     $(function () {
         $("#form_recherche_evenement").on('submit', function (ev) {
             ev.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url('evenements/rechercher'); ?>",
-                dataType: 'json',
-                data: $('#form_recherche_evenement').serialize(),
-                success: function (resultat) {
-                    $("#resultat_recherche").empty();
-                    $("#resultat_recherche").html(resultat);
-                },
-                error: function () {
-                    $("#resultat_recherche").empty();
-                    console.log("Erreur recherche groupe !");
-                }
-            });
+            if ($('#form_recherche_evenement #nomEvForm2').val() != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('evenements/rechercher'); ?>",
+                    dataType: 'json',
+                    data: $('#form_recherche_evenement').serialize(),
+                    success: function (resultat) {
+                        $("#resultat_recherche").empty();
+                        $("#resultat_recherche").html(resultat);
+                    },
+                    error: function () {
+                        $("#resultat_recherche").empty();
+                        console.log("Erreur recherche groupe !");
+                    }
+                });
+            }
         });
     });
 </script>

@@ -138,7 +138,7 @@ class Evenements extends CI_Controller {
         $recherche = $this->input->post('recherche');
         $nomEvenement = $this->input->post('nomEvenement');
         $this->load->model('amis_model');
-        $resultat = $this->amis_model->rechercherAmiPourInviterEvenement($this->session->userdata('user_login'), $recherche);
+        $resultat = $this->amis_model->rechercherAmiPourInviterEvenement($this->session->userdata('user_login'), $recherche, $nomEvenement);
 
         $return[] = '<ul>';
         foreach ($resultat as $ami) {

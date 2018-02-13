@@ -83,21 +83,21 @@ class User_model extends CI_Model {
     public function getPublications($loginUser) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
                 . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) "
-                . "RETURN {id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
+                . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
 
     public function getPublication($loginUser, $idPublication) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
                 . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) AND ID(publication) = $idPublication "
-                . "RETURN {id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
+                . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
 
     public function getCommentairesPublication($idPublication) {
-        $cypher = "MATCH (:USER)-[commentaire:COMMENTAIRE]->(publication:PUBLICATION) "
+        $cypher = "MATCH (user:USER)-[commentaire:COMMENTAIRE]->(publication:PUBLICATION) "
                 . "WHERE ID(publication) = $idPublication "
-                . "RETURN {id:ID(commentaire), commentaire:commentaire.commentaire}";
+                . "RETURN {id:ID(commentaire), commentaire:commentaire.commentaire, prenom:user.prenom, nom:user.nom}";
         return $this->neo->execute_query($cypher);
     }
 

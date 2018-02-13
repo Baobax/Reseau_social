@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $lang['form_validation_required'] = 'Le champ {field} est requis.';
 $lang['form_validation_isset'] = 'The {field} field must have a value.';
-$lang['form_validation_valid_email'] = 'The {field} field must contain a valid email address.';
+$lang['form_validation_valid_email'] = 'Le champ {field} doit contenir une adresse mail valide.';
 $lang['form_validation_email_inexistant'] = 'L\'adresse email que vous avez rentré est déjà utilisée.';
 $lang['form_validation_email_valide'] = 'Le champ {field} doit contenir une adresse mail en \'@enssat.fr\'.';
 $lang['form_validation_valid_emails'] = 'The {field} field must contain all valid email addresses.';

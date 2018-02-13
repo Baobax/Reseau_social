@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                <h2>Mes amis</h2>
+                <h3>Mes amis</h3>
                 <hr>
                 <?php foreach ($demandesAmisAccepteesEtRefusees as $ami) : ?>
                     <?php if ($ami[0]['etatDemande'] == 'acceptée') : ?>
@@ -11,7 +11,7 @@
                         <div class="alert alert-danger"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] . ' a rejeté votre demande d\'ami' ?></div>
                     <?php endif; ?>
                 <?php endforeach; ?>
-                <ul>
+                <ul class="liste_amis">
                     <?php if (isset($amis[0])) : ?>
                         <?php foreach ($amis as $ami) : ?>
                             <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a></li>
@@ -24,7 +24,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Rechercher un nouvel ami</h2>
+                        <h3>Rechercher un nouvel ami</h3>
 
                         <hr>
 
@@ -36,7 +36,7 @@
                                     <label for="personne">Rechercher par nom ou prénom :</label>
                                     <input type="text" class="form-control" name="personne" id="personne">
                                     <br>
-                                    <input type="submit" value="Rechercher">
+                                    <input type="submit" class="btn" value="Rechercher">
                                 </div>
                                 <?= form_close(); ?>
                             </div>
@@ -52,10 +52,8 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Demandes d'amis reçues</h2>
-
+                        <h3>Demandes d'amis reçues</h3>
                         <hr>
-
                         <ul>
                             <?php if (isset($demandesAmis[0])) : ?>
                                 <?php foreach ($demandesAmis as $personne) : ?>
@@ -74,7 +72,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>&Eacute;tat de mes demandes d'amis</h2>
+                        <h3>&Eacute;tat de mes demandes d'amis</h3>
 
                         <hr>
 

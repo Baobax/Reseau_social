@@ -56,7 +56,7 @@ class User extends CI_Controller {
 
 
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
-        //$this->form_validation->set_rules('email', 'eMail', 'required|trim|email_valide|email_inexistant');
+        $this->form_validation->set_rules('email', 'eMail', 'required|trim|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
         $this->form_validation->set_rules('prenom', 'Prenom', 'required|trim');
         $this->form_validation->set_rules('nom', 'Nom', 'required|trim');
@@ -103,25 +103,25 @@ class User extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
-    function email_valide($email) {
-        $pieces = explode('@', $email);
+    /* function email_valide($email) {
+      $pieces = explode('@', $email);
 
-        if ($pieces[1] != '@enssat.fr') {
-            return false;
-        } else {
-            return true;
-        }
-    }
+      if ($pieces[1] != '@enssat.fr') {
+      return false;
+      } else {
+      return true;
+      }
+      }
 
-    function email_inexistant($email) {
-        $this->load->model('user_model');
+      function email_inexistant($email) {
+      $this->load->model('user_model');
 
-        if ($this->user_model->check_si_email_existe($email)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+      if ($this->user_model->check_si_email_existe($email)) {
+      return true;
+      } else {
+      return false;
+      }
+      } */
 
     public function page() {
         if ($this->session->userdata('user_login') == NULL) {

@@ -86,9 +86,10 @@ class Amis_model extends CI_Model {
         $this->neo->execute_query($cypher);
     }
 
-    public function rechercherAmiPourInviterEvenement($monLogin, $recherche) {
+    public function rechercherAmiPourInviterEvenement($monLogin, $recherche, $nomEvenement) {
         $cypher = "MATCH (user1:USER)-[ami:AMI]-(user2:USER) "
                 . "WHERE user1.login = '$monLogin' AND (user2.prenom =~ '$recherche.*' OR user2.nom =~ '$recherche.*') "
+                . "AND NOT EXISTS ((user1)-[:INVITEAPARTICIPER{nomEvenement:'$nomEvenement'}]->(user2)) "
                 . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
         return $this->neo->execute_query($cypher);
     }

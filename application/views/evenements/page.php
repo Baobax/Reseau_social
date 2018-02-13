@@ -39,7 +39,7 @@
                             <input type="text" class="form-control" name="recherche" id="recherche">
                             <input type="hidden" class="form-control" name="nomEvenement" value="<?= $evenement[0][0]['nom'] ?>">
                             <br>
-                            <input type="submit" value="Rechercher">
+                            <input type="submit" class="btn" value="Rechercher">
                         </div>
                         <?= form_close(); ?>
                         <div id="resultat_recherche">
@@ -58,20 +58,22 @@
     $(function () {
         $("#form_recherche_ami_pour_inviter_evenement").on('submit', function (ev) {
             ev.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url('evenements/rechercherAmiPourInviter'); ?>",
-                dataType: 'json',
-                data: $('#form_recherche_ami_pour_inviter_evenement').serialize(),
-                success: function (resultat) {
-                    $("#resultat_recherche").empty();
-                    $("#resultat_recherche").html(resultat);
-                },
-                error: function () {
-                    $("#resultat_recherche").empty();
-                    console.log("Erreur recherche ami pour inviter à événement !");
-                }
-            });
+            if ($("#form_recherche_ami_pour_inviter_evenement #recherche").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('evenements/rechercherAmiPourInviter'); ?>",
+                    dataType: 'json',
+                    data: $('#form_recherche_ami_pour_inviter_evenement').serialize(),
+                    success: function (resultat) {
+                        $("#resultat_recherche").empty();
+                        $("#resultat_recherche").html(resultat);
+                    },
+                    error: function () {
+                        $("#resultat_recherche").empty();
+                        console.log("Erreur recherche ami pour inviter à événement !");
+                    }
+                });
+            }
         });
     });
 </script>

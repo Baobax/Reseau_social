@@ -109,4 +109,37 @@ class Amis extends CI_Controller {
         redirect('amis/page/' . urldecode($loginAmi));
     }
 
+    public function voirCommentaires($idPublication, $loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->load->model('user_model');
+        $data['page_title'] = 'Commentaires';
+        $data['publication'] = $this->user_model->getPublication(urldecode($loginAmi), urldecode($idPublication));
+        $data['commentaires'] = $this->user_model->getCommentairesPublication(urldecode($idPublication));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('amis/publication');
+        $this->load->view('layout/footer');
+    }
+
+    public function commenter() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->form_validation->set_rules('commentaire', 'Commentaire', 'required|trim');
+        $idPubli = $this->input->post('idPubli');
+        $loginAmi = $this->input->post('loginAmi');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $commentaire = $this->input->post('commentaire');
+
+            $this->amis_model->commenterPublication($this->session->userdata('user_login'), $idPubli, $commentaire);
+        }
+
+        redirect('amis/voirCommentaires/' . $idPubli . '/' . $loginAmi);
+    }
+
 }

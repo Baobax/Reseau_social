@@ -14,7 +14,7 @@
                             <textarea rows="3" name="texte" id="texte" class="form-control"></textarea>
                         </div>
 
-                        <input type="submit" value="Publier">
+                        <input type="submit" value="Publier" class="btn">
                         <?= form_close() ?>
                     </div>
 
@@ -30,7 +30,7 @@
                             <input type="text" name="legende" id="legende" class="form-control">
                         </div>
 
-                        <input type="submit" value="Publier">
+                        <input type="submit" value="Publier" class="btn">
                         <?= form_close() ?>
                     </div>
 
@@ -41,7 +41,7 @@
                             <textarea rows="3" name="lien" id="lien" class="form-control"></textarea>
                         </div>
 
-                        <input type="submit" value="Publier">
+                        <input type="submit" value="Publier" class="btn">
                         <?= form_close() ?>
                     </div>
                 </div>
@@ -50,22 +50,26 @@
 
 
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-6 col-sm-push-3">
                 <h3>Mon activité</h3>
                 <hr>
                 <?php foreach ($publications as $publication) : ?>
                     <div class="publication">
-                        <?php if ($publication[0]['type'] == 'video') : ?>
-                            <?= $publication[0]['content'] ?>
-                            <?= $publication[0]['legende'] ?>
-                        <?php elseif ($publication[0]['type'] == 'image') : ?>
-                            <figure><img src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
-                            <figcaption><?= $publication[0]['legende'] ?></figcaption>
-                        <?php else : ?>
-                            <?= $publication[0]['content'] ?>
-                        <?php endif; ?>
-
-                        <a href="<?= base_url('user/voirCommentaires/' . $publication[0]['id']) ?>">Voir les commentaires <i class="fa fa-comment"></i></a>
+                        <div class="corps">
+                            <?php if ($publication[0]['type'] == 'video') : ?>
+                                <?= $publication[0]['content'] ?>
+                                <?= $publication[0]['legende'] ?>
+                            <?php elseif ($publication[0]['type'] == 'image') : ?>
+                                <figure><img width="400" src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
+                                <figcaption><?= $publication[0]['legende'] ?></figcaption>
+                            <?php else : ?>
+                                <?= $publication[0]['content'] ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="infos">
+                            <a href="<?= base_url('user/voirCommentaires/' . $publication[0]['id']) ?>">Voir les commentaires <?= $publication[0]['nbcommentaires'] ?> <i class="fa fa-comment"></i></a>
+                            | <?= $publication[0]['nbjaimes'] ?> <i class="fa fa-thumbs-up"></i>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>

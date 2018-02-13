@@ -13,6 +13,10 @@ body {
     background: #222222;
 }
 
+.btn:hover {
+    border: solid 1px #CECECE;
+}
+
 .corps {
     padding: 20px 0;
     background: white;
@@ -72,6 +76,44 @@ body {
 
 .bloc_identification a {
 	color: white;
+}
+
+/*--------------Page user--------------*/
+.publication {
+    margin: 20px 0;
+    border: solid 1px black;
+}
+
+div.publication .corps {
+    padding: 10px;
+    text-align: center;
+}
+
+div.publication .infos {
+    padding: 10px;
+    background: #CCCCCC;
+    text-align: right;
+}
+
+div.publication .infos, div.publication .infos a {
+    color: black;
+}
+
+/*--------------Page ami--------------*/
+.commentaire {
+    margin: 20px 0;
+    border: solid 1px black;
+}
+
+.commentaire .entete {
+    padding: 10px;
+    background: #CCCCCC;
+    text-align: right;
+    color: black;
+}
+
+.commentaire .contenu {
+    padding: 10px;
 }
 
 

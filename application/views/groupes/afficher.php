@@ -4,7 +4,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Créer un groupe</h2>
+                        <h3>Créer un groupe</h3>
 
                         <hr>
 
@@ -27,7 +27,7 @@
                             </select>
                         </div>
 
-                        <input type="submit" value="Créer">
+                        <input type="submit" class="btn" value="Créer">
                         <?= form_close() ?>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Rechercher un nouveau groupe</h2>
+                        <h3>Rechercher un nouveau groupe</h3>
 
                         <hr>
 
@@ -80,7 +80,7 @@
                                     <label for="nom">Rechercher un groupe par son nom :</label>
                                     <input type="text" class="form-control" name="nom" id="nom">
                                     <br>
-                                    <input type="submit" value="Rechercher">
+                                    <input type="submit" class="btn" value="Rechercher">
                                 </div>
                                 <?= form_close(); ?>
                             </div>
@@ -96,7 +96,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>Demandes d'intégration de groupe reçues</h2>
+                        <h3>Demandes d'intégration de groupe reçues</h3>
 
                         <hr>
 
@@ -114,7 +114,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2>&Eacute;tat de mes demandes</h2>
+                        <h3>&Eacute;tat de mes demandes</h3>
 
                         <hr>
 
