@@ -6,11 +6,15 @@
                 <hr>
                 <div class="publication">
                     <div class="corps">
-                        <?php if ($publication[0][0]['type'] == 'video') : ?>
-                            <?= $publication[0][0]['content'] ?>
-                            <?= $publication[0][0]['legende'] ?>
+                        <?php if ($publication[0][0]['type'] == 'vidéo') : ?>
+                            <figure>
+                                <video width="400" src="<?= base_url('assets/uploads/' . $publication[0][0]['login'] . '/' . $publication[0][0]['content']) ?>" controls>
+                                    Votre navigateur ne permet pas de lire les vidéos.
+                                </video>
+                            </figure>
+                            <figcaption><?= $publication[0][0]['legende'] ?></figcaption>
                         <?php elseif ($publication[0][0]['type'] == 'image') : ?>
-                            <figure><img src="<?= base_url('assets/uploads/' . $publication[0][0]['login'] . '/' . $publication[0][0]['content']) ?>"/></figure>
+                            <figure><img width="400" src="<?= base_url('assets/uploads/' . $publication[0][0]['login'] . '/' . $publication[0][0]['content']) ?>"/></figure>
                             <figcaption><?= $publication[0][0]['legende'] ?></figcaption>
                         <?php else : ?>
                             <?= $publication[0][0]['content'] ?>

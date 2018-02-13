@@ -59,31 +59,25 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher);
     }
 
-    public function publierTexte($monLogin, $texte, $typePublication) {
+    public function publierTexte($monLogin, $texte, $typePublication, $dateAjout) {
         $cypher = "MATCH (user:USER) "
                 . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$texte', type:'$typePublication'})";
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$texte', type:'$typePublication', dateAjout:'$dateAjout'})";
         $this->neo->execute_query($cypher);
     }
 
-    public function publierVideo($monLogin, $lienVideo, $typePublication) {
+    public function publierMedia($monLogin, $lienMedia, $legende, $typePublication, $dateAjout) {
         $cypher = "MATCH (user:USER) "
                 . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienVideo', type:'$typePublication'})";
-        $this->neo->execute_query($cypher);
-    }
-
-    public function publierImage($monLogin, $lienVideo, $legende, $typePublication) {
-        $cypher = "MATCH (user:USER) "
-                . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienVideo', legende:'$legende', type:'$typePublication'})";
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienMedia', legende:'$legende', type:'$typePublication', dateAjout:'$dateAjout'})";
         $this->neo->execute_query($cypher);
     }
 
     public function getPublications($loginUser) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
                 . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) "
-                . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
+                . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom} "
+                . "ORDER BY publication.dateAjout DESC";
         return $this->neo->execute_query($cypher);
     }
 

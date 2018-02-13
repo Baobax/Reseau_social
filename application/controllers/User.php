@@ -191,8 +191,9 @@ class User extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $texte = $this->input->post('texte');
             $typePublication = "texte";
+            $dateAjout = date('YmdHis');
 
-            $this->user_model->publierTexte($this->session->userdata('user_login'), $texte, $typePublication);
+            $this->user_model->publierTexte($this->session->userdata('user_login'), $texte, $typePublication, $dateAjout);
         }
 
         redirect('user/page');
@@ -203,13 +204,23 @@ class User extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->form_validation->set_rules('lien', 'Lien', 'required|trim');
+        $this->form_validation->set_rules('legendeVideo', 'Légende', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $lienVideo = $this->input->post('lien');
-            $typePublication = "video";
+            $legende = $this->input->post('legendeVideo');
+            $typePublication = "vidéo";
+            $dateAjout = date('YmdHis');
 
-            $this->user_model->publierVideo($this->session->userdata('user_login'), $lienVideo, $typePublication);
+            $file = $this->_file_upload_video('fichierVideo');
+            if ($file === 2) {
+                $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : mp4</div>");
+            } else if ($file === false) {
+                $this->session->set_flashdata('message', "<div class='alert alert-danger'>Le champ fichier est requis</div>");
+            } else {
+                $cheminVideo = $file['file_name'];
+                $this->user_model->publierMedia($this->session->userdata('user_login'), $cheminVideo, $legende, $typePublication, $dateAjout);
+                $this->session->set_flashdata('message', "<div class='alert alert-success'>La vidéo a été ajoutée avec succès</div>");
+            }
         }
 
         redirect('user/page');
@@ -225,15 +236,16 @@ class User extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $legende = $this->input->post('legende');
             $typePublication = "image";
+            $dateAjout = date('YmdHis');
 
-            $file = $this->_file_upload('fichier');
+            $file = $this->_file_upload_img('fichier');
             if ($file === 2) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : gif, jpg, jpeg et png</div>");
             } else if ($file === false) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Le champ fichier est requis</div>");
             } else {
                 $cheminImage = $file['file_name'];
-                $this->user_model->publierImage($this->session->userdata('user_login'), $cheminImage, $legende, $typePublication);
+                $this->user_model->publierMedia($this->session->userdata('user_login'), $cheminImage, $legende, $typePublication, $dateAjout);
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>L'image a été ajoutée avec succès</div>");
             }
         }
@@ -241,7 +253,7 @@ class User extends CI_Controller {
         redirect('user/page');
     }
 
-    public function _file_upload($file) {
+    public function _file_upload_img($file) {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');
         }
@@ -253,6 +265,34 @@ class User extends CI_Controller {
             $config['file_name'] = url_title($filename, "_", true);
             $config['upload_path'] = "assets/uploads/" . $this->session->userdata('user_login');
             $config['allowed_types'] = 'gif|jpg|jpeg|png';
+
+            if (!file_exists('assets/uploads/' . $this->session->userdata('user_login'))) {
+                mkdir('assets/uploads/' . $this->session->userdata('user_login'), 0777, true);
+            }
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload($file)) {
+                return 2;
+            } else {
+                return $this->upload->data();
+            }
+        }
+        return false;
+    }
+
+    public function _file_upload_video($file) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        if ($_FILES[$file]['name'] != "") {
+            $this->load->helper("text");
+            $tampon = explode('.', $_FILES[$file]['name']);
+            $filename = convert_accented_characters($tampon[0]);
+            $config['file_name'] = url_title($filename, "_", true);
+            $config['upload_path'] = "assets/uploads/" . $this->session->userdata('user_login');
+            $config['allowed_types'] = 'mp4';
 
             if (!file_exists('assets/uploads/' . $this->session->userdata('user_login'))) {
                 mkdir('assets/uploads/' . $this->session->userdata('user_login'), 0777, true);
