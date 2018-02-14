@@ -1,5 +1,5 @@
 <footer class="footer">
-    Nom du site © 2018
+    ENSSAVENIR © 2018
 </footer>
 </body>
 </html>

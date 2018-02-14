@@ -51,7 +51,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="<?= base_url('user/page') ?>">Réseau social</a>
+                    <a class="navbar-brand" href="<?= base_url('user/page') ?>">ENSSAVENIR</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
