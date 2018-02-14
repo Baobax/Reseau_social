@@ -17,13 +17,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="login">Login</label>
-                                <input type="text" name="login" id="login" class="form-control"/>
+                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="login" id="login" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="email">eMail</label>
-                                <input type="text" name="email" id="email" class="form-control"/>
+                                <input type="text" placeholder="Adresse en @enssat.fr" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*@enssat.fr" name="email" id="email" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -43,13 +43,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="prenom">Prénom</label>
-                                <input type="text" name="prenom" id="prenom" class="form-control"/>
+                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="prenom" id="prenom" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nom">Nom</label>
-                                <input type="text" name="nom" id="nom" class="form-control"/>
+                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="nom" id="nom" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -58,15 +58,15 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="date_naissance">Date de naissance</label>
-                                <input type="text" name="date_naissance" id="date_naissance"    class="form-control" readonly="true"/>
+                                <input type="text" name="date_naissance" id="date_naissance" class="form-control" readonly="true"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Genre</label>
                                 <select name="genre" id="genre" class="form-control">
-                                    <option value="homme">Homme</option>
-                                    <option value="femme">Femme</option>
+                                    <option value="Homme">Homme</option>
+                                    <option value="Femme">Femme</option>
                                 </select>
                             </div>
                         </div>
@@ -89,10 +89,10 @@
                             <div class="form-group">
                                 <label>Discipline</label>
                                 <select name="discipline" id="discipline" class="form-control">
-                                    <option value="électronique">&Eacute;lectronique</option>
-                                    <option value="informatique">Informatique</option>
-                                    <option value="photonique">Photonique</option>
-                                    <option value="imr">Informatique, Multimédia et Réseaux</option>
+                                    <option value="Électronique">&Eacute;lectronique</option>
+                                    <option value="Informatique">Informatique</option>
+                                    <option value="Photonique">Photonique</option>
+                                    <option value="IMR">Informatique, Multimédia et Réseaux</option>
                                 </select>
                             </div>
                         </div>

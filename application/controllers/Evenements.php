@@ -156,7 +156,7 @@ class Evenements extends CI_Controller {
 
         $this->evenements_model->demanderAParticiper($this->session->userdata('user_login'), urldecode($loginAmi), urldecode($nomEvenement));
 
-        redirect('evenements/afficher');
+        redirect('evenements/page/' . $nomEvenement);
     }
 
     public function accepterInvitation($nomEvenement) {

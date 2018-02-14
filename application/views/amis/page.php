@@ -1,8 +1,8 @@
 <div class="corps">
     <div class="container">
         <div class="row">
-            <div class="col-sm-6 col-sm-push-3">
-                <h3>Page de <?= $publications[0][0]['prenom'] ?> <?= $publications[0][0]['nom'] ?></h3>
+            <div class="col-sm-10 col-sm-push-1 col-md-6 col-md-push-3">
+                <h3>Page de <?= $user[0][0]['prenom'] ?> <?= $user[0][0]['nom'] ?></h3>
                 <hr>
                 <?php if (isset($publications[0])) : ?>
                     <?php foreach ($publications as $publication) : ?>
@@ -10,13 +10,13 @@
                             <div class="corps">
                                 <?php if ($publication[0]['type'] == 'vidéo') : ?>
                                     <figure>
-                                        <video width="400" src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>" controls>
+                                        <video src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>" controls>
                                             Votre navigateur ne permet pas de lire les vidéos.
                                         </video>
                                     </figure>
                                     <figcaption><?= $publication[0]['legende'] ?></figcaption>
                                 <?php elseif ($publication[0]['type'] == 'image') : ?>
-                                    <figure><img width="400" src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
+                                    <figure><img src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
                                     <figcaption><?= $publication[0]['legende'] ?></figcaption>
                                 <?php else : ?>
                                     <?= $publication[0]['content'] ?>

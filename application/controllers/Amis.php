@@ -41,6 +41,7 @@ class Amis extends CI_Controller {
 
         $this->load->model('user_model');
         $data['page_title'] = 'Page';
+        $data['user'] = $this->user_model->getUser(urldecode($loginAmi));
         $data['publications'] = $this->user_model->getPublications(urldecode($loginAmi));
 
         $this->load->view('layout/header', $data);
@@ -107,6 +108,16 @@ class Amis extends CI_Controller {
         $this->amis_model->aimerPublication($this->session->userdata('user_login'), urldecode($idPublication));
 
         redirect('amis/page/' . urldecode($loginAmi));
+    }
+
+    public function aimerDepuisPublication($idPublication, $loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->amis_model->aimerPublication($this->session->userdata('user_login'), urldecode($idPublication));
+
+        redirect('amis/voirCommentaires/' . urldecode($idPublication) . '/' . urldecode($loginAmi));
     }
 
     public function voirCommentaires($idPublication, $loginAmi) {

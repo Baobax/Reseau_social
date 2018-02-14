@@ -82,7 +82,7 @@ class User extends CI_Controller {
             $testExistence = $this->user_model->inscription($postdata);
 
             if (!$testExistence) {
-                $this->session->set_flashdata('message', '<div>Ce login existe déjà, choisissez-en un autre.</div>');
+                $this->session->set_flashdata('message', '<div>Ce login ou email existe déjà, choisissez-en un autre.</div>');
                 redirect('user/inscription');
             } else {
                 $this->session->set_userdata('user_login', $postdata['login']);

@@ -6,18 +6,18 @@
                 <hr>
 
                 <div class="row">
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-md-4">
                         <?= form_open('user/publierTexte') ?>
                         <div class="form-group">
                             <label for="texte">Publier du texte</label>
-                            <textarea rows="3" name="texte" id="texte" class="form-control"></textarea>
+                            <textarea rows="3" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="texte" id="texte" class="form-control"></textarea>
                         </div>
 
                         <input type="submit" value="Publier" class="btn">
                         <?= form_close() ?>
                     </div>
-
-                    <div class="col-md-4 col-sm-6">
+                    <hr class="visible-xs visible-sm">
+                    <div class="col-md-4">
                         <?= form_open_multipart('user/publierImage') ?>
                         <div class="form-group">
                             <label for="fichier">Publier une image</label>
@@ -26,14 +26,14 @@
 
                         <div class="form-group">
                             <label for="legende">Légende de l'image</label>
-                            <input type="text" name="legende" id="legende" class="form-control">
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="legende" id="legende" class="form-control">
                         </div>
 
                         <input type="submit" value="Publier" class="btn">
                         <?= form_close() ?>
                     </div>
-
-                    <div class="col-md-4 col-sm-6">
+                    <hr class="visible-xs visible-sm">
+                    <div class="col-md-4">
                         <?= form_open_multipart('user/publierVideo') ?>
                         <div class="form-group">
                             <label for="fichierVideo">Publier une vidéo</label>
@@ -42,7 +42,7 @@
 
                         <div class="form-group">
                             <label for="legendeVideo">Légende de la vidéo</label>
-                            <input type="text" name="legendeVideo" id="legendeVideo" class="form-control">
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="legendeVideo" id="legendeVideo" class="form-control">
                         </div>
 
                         <input type="submit" value="Publier" class="btn">
@@ -52,9 +52,10 @@
             </div>
         </div>
 
+        <hr>
 
         <div class="row">
-            <div class="col-sm-6 col-sm-push-3">
+            <div class="col-sm-10 col-sm-push-1 col-md-6 col-md-push-3">
                 <h3>Mon activité</h3>
                 <hr>
                 <?php if (isset($publications[0])) : ?>
@@ -63,13 +64,13 @@
                             <div class="corps">
                                 <?php if ($publication[0]['type'] == 'vidéo') : ?>
                                     <figure>
-                                        <video width="400" src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>" controls>
+                                        <video src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>" controls>
                                             Votre navigateur ne permet pas de lire les vidéos.
                                         </video>
                                     </figure>
                                     <figcaption><?= $publication[0]['legende'] ?></figcaption>
                                 <?php elseif ($publication[0]['type'] == 'image') : ?>
-                                    <figure><img width="400" src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
+                                    <figure><img src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>"/></figure>
                                     <figcaption><?= $publication[0]['legende'] ?></figcaption>
                                 <?php else : ?>
                                     <?= $publication[0]['content'] ?>
