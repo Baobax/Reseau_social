@@ -63,6 +63,7 @@
                             <a class="<?php if ($page_title == 'Mon compte') echo 'active'; ?>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"> <?= $this->session->userdata('user_login') ?></i><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?= base_url('amis') ?>">Mes amis</a></li>
+                                <li><a href="<?= base_url('amis/chat') ?>">Chat</a></li>
                                 <li><a href="<?= base_url('user/mesInformations') ?>">Mes informations</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="<?= base_url('user/parametres') ?>">Paramètres</a></li>

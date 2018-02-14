@@ -15,7 +15,7 @@
                         <?= form_open('evenements/creerEvenement') ?>
                         <div class="form-group">
                             <label for="nomEvForm1">Nom</label>
-                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="nom" id="nomEvForm1" class="form-control"/>
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="nom" id="nomEvForm1" class="form-control"/>
                         </div>
 
                         <div class="form-group">

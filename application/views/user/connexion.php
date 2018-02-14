@@ -25,7 +25,7 @@
 
                     <br>
 
-                    <input type="submit" class="btn" value="S'inscrire">
+                    <input type="submit" class="btn" value="Se connecter">
 
                     <?= form_close() ?>
                 </div>

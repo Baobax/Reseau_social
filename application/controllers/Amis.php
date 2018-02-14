@@ -153,4 +153,52 @@ class Amis extends CI_Controller {
         redirect('amis/voirCommentaires/' . $idPubli . '/' . $loginAmi);
     }
 
+    public function chat() {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $this->form_validation->set_rules('etat', 'État', 'required|trim');
+        $this->load->model('user_model');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $etat = $this->input->post('etat');
+            $this->user_model->setEtat($this->session->userdata('user_login'), $etat);
+        }
+
+        $data['page_title'] = 'Chat';
+        $data['user'] = $this->user_model->getUser($this->session->userdata('user_login'));
+        $data['amis'] = $this->amis_model->getListeAmis($this->session->userdata('user_login'));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('user/accueil_chat');
+        $this->load->view('layout/footer');
+    }
+
+    public function pageChat($loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $data['page_title'] = 'Chat';
+        $this->load->model('user_model');
+        $data['ami'] = $this->user_model->getUser(urldecode($loginAmi));
+        $data['conversation'] = $this->amis_model->getConversation($this->session->userdata('user_login'), urldecode($loginAmi));
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('amis/page_chat');
+        $this->load->view('layout/footer');
+    }
+
+    public function envoyerMessage($loginAmi) {
+        if ($this->session->userdata('user_login') == NULL) {
+            redirect('user/connexion');
+        }
+
+        $message = $this->input->post('message');
+        $this->amis_model->envoiMessage($this->session->userdata('user_login'), urldecode($loginAmi), $message);
+
+        echo true;
+    }
+
 }

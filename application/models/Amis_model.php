@@ -10,7 +10,7 @@ class Amis_model extends CI_Model {
     public function getListeAmis($monLogin) {
         $cypher = "MATCH (user1:USER)-[ami:AMI]-(user2:USER) "
                 . "WHERE user1.login = '$monLogin' "
-                . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
+                . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom, etat:user2.etat}";
         return $this->neo->execute_query($cypher);
     }
 
@@ -81,7 +81,7 @@ class Amis_model extends CI_Model {
     public function refuserDemande($loginMoi, $loginAmi) {
         //Passage de l'état de la demande d'ami à rejetée
         $cypher = "MATCH (user1:USER)-[demandeami:DEMANDEAMI]->(user2:USER) "
-                . "WHERE user1.login = '$loginAmi' "
+                . "WHERE user1.login = '$loginAmi' AND user2.login = '$loginMoi' "
                 . "SET demandeami.etatDemande = 'rejetée'";
         $this->neo->execute_query($cypher);
     }
@@ -106,6 +106,21 @@ class Amis_model extends CI_Model {
                 . "WHERE ID(publication) = $idPublication AND user.login = '$monLogin' "
                 . "CREATE (user)-[:COMMENTAIRE{commentaire:'$commentaire'}]->(publication)";
         $this->neo->execute_query($cypher);
+    }
+
+    public function envoiMessage($monLogin, $loginAmi, $message) {
+        $cypher = "MATCH (user:USER), (ami:USER) "
+                . "WHERE user.login = '$monLogin' AND ami.login = '$loginAmi' "
+                . "CREATE (user)-[:MESSAGE{loginEnvoyeur:'$monLogin', message:'$message', dateEnvoi:'" . date('YmdHis') . "'}]->(ami)";
+        $this->neo->execute_query($cypher);
+    }
+
+    public function getConversation($monLogin, $loginAmi) {
+        $cypher = "OPTIONAL MATCH (user:USER)-[message:MESSAGE]-(ami:USER) "
+                . "WHERE user.login = '$monLogin' AND ami.login = '$loginAmi' "
+                . "RETURN {loginEnvoyeur:message.loginEnvoyeur, message:message.message} "
+                . "ORDER BY message.dateEnvoi";
+        return $this->neo->execute_query($cypher);
     }
 
 }

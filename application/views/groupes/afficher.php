@@ -16,7 +16,7 @@
                         <?= form_open('groupes/creer') ?>
                         <div class="form-group">
                             <label for="label">Label du groupe</label>
-                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="label" id="label" class="form-control"/>
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="label" id="label" class="form-control"/>
                         </div>
 
                         <div class="form-group">

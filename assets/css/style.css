@@ -120,6 +120,19 @@ div.publication .infos, div.publication .infos a {
     padding: 10px;
 }
 
+/*--------------Chat--------------*/
+.fenetre_chat {
+    border: solid 1px #222222;
+}
+
+.messageMoi {
+    text-align: right;
+}
+
+.messageAmi {
+    text-align: left;
+}
+
 
 
 footer {

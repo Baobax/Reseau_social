@@ -34,6 +34,8 @@ class User extends CI_Controller {
                 $this->session->set_userdata('couleur_site', $user[0][0]['couleurSite']);
                 $this->session->set_userdata('couleur_texte', $user[0][0]['couleurTexte']);
                 $this->session->set_userdata('fond_site', $user[0][0]['fondSite']);
+                $etat = 'connecté';
+                $this->user_model->setEtat($login, $etat);
 
                 redirect("user/page");
             } else {
@@ -78,6 +80,7 @@ class User extends CI_Controller {
             $postdata['couleurSite'] = '#222222';
             $postdata['couleurTexte'] = '#000000';
             $postdata['fondSite'] = '#ffffff';
+            $postdata['etat'] = 'connecté';
 
             $testExistence = $this->user_model->inscription($postdata);
 
@@ -336,7 +339,11 @@ class User extends CI_Controller {
     }
 
     public function deconnexion() {
+        $etat = 'déconnecté';
+        $this->user_model->setEtat($this->session->userdata('user_login'), $etat);
+
         $this->session->unset_userdata('user_login');
+
         redirect('user/connexion');
     }
 

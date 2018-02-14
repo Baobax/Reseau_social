@@ -14,7 +14,7 @@
                 <ul class="liste_amis">
                     <?php if (isset($amis[0])) : ?>
                         <?php foreach ($amis as $ami) : ?>
-                            <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a></li>
+                            <li><a href="<?= base_url('amis/page/') . $ami[0]['login'] ?>"><?= $ami[0]['prenom'] . ' ' . $ami[0]['nom'] ?></a> (<?= $ami[0]['etat'] ?>)</li>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <li>Je n'ai pas d'ami :(</li>

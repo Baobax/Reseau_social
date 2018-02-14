@@ -12,7 +12,15 @@ class User_model extends CI_Model {
         return $this->neo->execute_query($cypher);
     }
 
+    public function setEtat($login, $etat) {
+        $cypher = "MATCH(user:USER) "
+                . "WHERE user.login = '$login' "
+                . "SET user.etat = '$etat'";
+        $this->neo->execute_query($cypher);
+    }
+
     public function inscription($postdata) {
+        //vérif de l'existence du login
         $cypherTest = "MATCH(user:USER) "
                 . "WHERE user.login = '" . $postdata['login'] . "' "
                 . "RETURN user.login";
@@ -22,6 +30,7 @@ class User_model extends CI_Model {
             return false;
         }
 
+        //Vérification de l'existence de l'email
         $cypherTest = "MATCH(user:USER) "
                 . "WHERE user.email = '" . $postdata['email'] . "' "
                 . "RETURN user.email";
@@ -37,7 +46,8 @@ class User_model extends CI_Model {
                 . "email: '" . $postdata['email'] . "', dateNaissance: '" . $postdata['dateNaissance'] . "', "
                 . "genre: '" . $postdata['genre'] . "', annee: '" . $postdata['annee'] . "', "
                 . "discipline: '" . $postdata['discipline'] . "', couleurSite: '" . $postdata['couleurSite'] . "', "
-                . "couleurTexte: '" . $postdata['couleurTexte'] . "', fondSite: '" . $postdata['fondSite'] . "'})";
+                . "couleurTexte: '" . $postdata['couleurTexte'] . "', fondSite: '" . $postdata['fondSite'] . "', "
+                . "etat: '" . $postdata['etat'] . "'})";
         $this->neo->execute_query($cypher);
 
         return true;
@@ -86,7 +96,7 @@ class User_model extends CI_Model {
     public function getUser($loginUser) {
         $cypher = "MATCH (user:USER) "
                 . "WHERE user.login = '$loginUser' "
-                . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom}";
+                . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom, etat:user.etat}";
         return $this->neo->execute_query($cypher);
     }
 

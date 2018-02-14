@@ -89,10 +89,10 @@
                             <div class="form-group">
                                 <label>Discipline</label>
                                 <select name="discipline" id="discipline" class="form-control">
+                                    <option value="IMR">Informatique, Multimédia et Réseaux</option>
                                     <option value="Électronique">&Eacute;lectronique</option>
                                     <option value="Informatique">Informatique</option>
                                     <option value="Photonique">Photonique</option>
-                                    <option value="IMR">Informatique, Multimédia et Réseaux</option>
                                 </select>
                             </div>
                         </div>
