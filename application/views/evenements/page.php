@@ -7,13 +7,13 @@
                 <a href="<?= base_url('evenements/nePlusParticiper/') . $evenement[0][0]['nom'] ?>" OnClick="return confirm('Voulez-vous vraiment ne plus participer à cet événement ?');">Ne plus participer</a>
                 <br>
                 <br>
-                <table>
+                <table class="table">
                     <tr>
-                        <td>Type d'événement</td>
+                        <td><b>Type d'événement</b></td>
                         <td><?= $evenement[0][0]['type'] ?></td>
                     </tr>
                     <tr>
-                        <td>Date</td>
+                        <td><b>Date</b></td>
                         <td>
                             <?php
                             $dateTmp = explode('/', $evenement[0][0]['date']);
@@ -22,7 +22,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Lieu</td>
+                        <td><b>Lieu</b></td>
                         <td><?= $evenement[0][0]['lieu'] ?></td>
                     </tr>
                 </table>

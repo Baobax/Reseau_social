@@ -66,7 +66,8 @@ class Groupes_model extends CI_Model {
         //Récupération des groupes auxquels appartient l'user
         $cypher = "MATCH (user:USER)-[membre:MEMBRE]->(groupe:GROUPE) "
                 . "WHERE user.login = '$login' AND membre.admin = 'oui' "
-                . "RETURN groupe.label";
+                . "RETURN groupe.label "
+                . "ORDER BY groupe.label";
         return $this->neo->execute_query($cypher);
     }
 
@@ -74,7 +75,8 @@ class Groupes_model extends CI_Model {
         //Récupération des groupes auxquels appartient l'user
         $cypher = "MATCH (user:USER)-[membre:MEMBRE]->(groupe:GROUPE) "
                 . "WHERE user.login = '$login' AND membre.admin = 'non' "
-                . "RETURN groupe.label";
+                . "RETURN groupe.label "
+                . "ORDER BY groupe.label";
         return $this->neo->execute_query($cypher);
     }
 

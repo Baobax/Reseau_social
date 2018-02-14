@@ -10,7 +10,7 @@
                         <?= form_open('user/publierTexte') ?>
                         <div class="form-group">
                             <label for="texte">Publier du texte</label>
-                            <textarea rows="3" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="texte" id="texte" class="form-control"></textarea>
+                            <textarea rows="3" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="texte" id="texte" class="form-control"></textarea>
                         </div>
 
                         <input type="submit" value="Publier" class="btn">
@@ -26,7 +26,7 @@
 
                         <div class="form-group">
                             <label for="legende">Légende de l'image</label>
-                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="legende" id="legende" class="form-control">
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="legende" id="legende" class="form-control">
                         </div>
 
                         <input type="submit" value="Publier" class="btn">
@@ -42,7 +42,7 @@
 
                         <div class="form-group">
                             <label for="legendeVideo">Légende de la vidéo</label>
-                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="legendeVideo" id="legendeVideo" class="form-control">
+                            <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="legendeVideo" id="legendeVideo" class="form-control">
                         </div>
 
                         <input type="submit" value="Publier" class="btn">

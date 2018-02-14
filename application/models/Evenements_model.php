@@ -32,7 +32,8 @@ class Evenements_model extends CI_Model {
         //Récupération des événements auxquels participe l'user
         $cypher = "MATCH (user:USER)-[participe:PARTICIPE]->(evenement:EVENEMENT) "
                 . "WHERE user.login = '$login' "
-                . "RETURN evenement.nom";
+                . "RETURN evenement.nom "
+                . "ORDER BY evenement.nom";
         return $this->neo->execute_query($cypher);
     }
 

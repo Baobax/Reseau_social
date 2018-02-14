@@ -78,6 +78,14 @@ body {
 	color: white;
 }
 
+.bloc_identification .btn {
+	color: black;
+}
+
+.bloc_identification .btn:hover {
+	color: white;
+}
+
 /*--------------Page user--------------*/
 .publication {
     margin: 20px 0;
@@ -127,10 +135,16 @@ div.publication .infos, div.publication .infos a {
 
 .messageMoi {
     text-align: right;
+    background: #4267B2;
+    padding: 5px;
+    border-radius: 10px;
 }
 
 .messageAmi {
     text-align: left;
+    background: #EEEEEE;
+    padding: 5px;
+    border-radius: 10px;
 }
 
 

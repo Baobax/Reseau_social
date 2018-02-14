@@ -4,16 +4,18 @@
             <div class="col-sm-6 col-sm-push-3 text-center">
                 <h3>Chatter</h3>
                 <hr>
-                <div id="fenetre_chat" style="overflow:scroll; height:200px;">
+                <div id="fenetre_chat" style="overflow:scroll; height:400px;">
                     <?php foreach ($conversation as $message) : ?>
                         <?php if ($message[0]['loginEnvoyeur'] == $this->session->userdata('user_login')) : ?>
                             <div class="messageMoi">
-                                <?= $message[0]['message'] ?>
+                                <?= $message[0]['message'] ?> (<?= $message[0]['loginEnvoyeur'] ?>)
                             </div>
+                            <br>
                         <?php else : ?>
                             <div class="messageAmi">
-                                <?= $message[0]['message'] ?>
+                                (<?= $message[0]['loginEnvoyeur'] ?>) <?= $message[0]['message'] ?>
                             </div>
+                            <br>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
@@ -39,6 +41,7 @@
                 data: $('#form_chat').serialize(),
                 success: function (resultat) {
                     $("#message").val('');
+                    window.location.reload();
                 },
                 error: function () {
                     console.log("Erreur recherche groupe !");
