@@ -4,7 +4,7 @@
             <div class="col-sm-10 col-sm-push-1 col-md-6 col-md-push-3">
                 <h3>Publication  de <?= $publication[0][0]['prenom'] ?> <?= $publication[0][0]['nom'] ?></h3>
                 <hr>
-                <div class="publication">
+                <div class="bloc publication">
                     <div class="contenu">
                         <?php if ($publication[0][0]['type'] == 'vidéo') : ?>
                             <figure>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
 
-                <div class="commenter">
+                <div class="bloc commenter">
                     <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
 
                     <?= form_open('amis/commenter') ?>
@@ -44,7 +44,7 @@
                 <div class="commentaires">
                     <?php if (isset($commentaires[0])) : ?>
                         <?php foreach ($commentaires as $commentaire) : ?>
-                            <div class="commentaire">
+                            <div class="bloc commentaire">
                                 <div class="entete">
                                     <?= $commentaire[0]['prenom'] ?> <?= $commentaire[0]['nom'] ?>
                                 </div>

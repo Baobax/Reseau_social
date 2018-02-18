@@ -19,12 +19,13 @@ class Groupes extends CI_Controller {
         }
 
 
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
         $data['page_title'] = 'Mes groupes';
-        $data['groupesAdmin'] = $this->groupes_model->getGroupesAdmin($this->session->userdata('user_login'));
-        $data['groupesMembre'] = $this->groupes_model->getGroupesMembre($this->session->userdata('user_login'));
-        $data['demandesIntegration'] = $this->groupes_model->getDemandesIntegration($this->session->userdata('user_login'));
-        $data['etatDemandesGroupes'] = $this->groupes_model->getEtatDemandes($this->session->userdata('user_login'));
-        $data['demandesAccepteesEtRefusees'] = $this->groupes_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
+        $data['groupesAdmin'] = $this->groupes_model->getGroupesAdmin($BDdata);
+        $data['groupesMembre'] = $this->groupes_model->getGroupesMembre($BDdata);
+        $data['demandesIntegration'] = $this->groupes_model->getDemandesIntegration($BDdata);
+        $data['etatDemandesGroupes'] = $this->groupes_model->getEtatDemandes($BDdata);
+        $data['demandesAccepteesEtRefusees'] = $this->groupes_model->getDemandesAccepteesEtRefusees($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('groupes/afficher');
@@ -38,7 +39,9 @@ class Groupes extends CI_Controller {
 
 
         //Je passe en argument le login de l'user pour être sur qu'il appartient bien au groupe
-        $groupe = $this->groupes_model->getGroupe($this->session->userdata('user_login'), urldecode($label));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['label'] = urldecode($label);
+        $groupe = $this->groupes_model->getGroupe($BDdata);
 
         //Je vérifie s'il appartient bien au groupe
         if (isset($groupe[0])) {
@@ -62,14 +65,15 @@ class Groupes extends CI_Controller {
         $this->form_validation->set_rules('label', 'Label du groupe', 'required|trim');
         $this->form_validation->set_rules('configuration', 'Configuration du groupe', 'required|trim');
 
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
         if ($this->form_validation->run() !== FALSE) {
-            $label = $this->input->post('label');
-            $configuration = $this->input->post('configuration');
+            $BDdata['label'] = $this->input->post('label');
+            $BDdata['configuration'] = $this->input->post('configuration');
 
-            $groupe = $this->groupes_model->verifExistenceNom($label);
+            $groupe = $this->groupes_model->verifExistenceNom($BDdata);
 
             if (!isset($groupe[0])) {
-                $this->groupes_model->creerGroupe($this->session->userdata('user_login'), $label, $configuration);
+                $this->groupes_model->creerGroupe($BDdata);
                 $this->session->set_flashdata('message', '<div class="alert alert-success">Le groupe a bien été créé.</div>');
             } else {
                 $this->session->set_flashdata('message', '<div class="alert alert-danger">Ce nom de groupe existe déjà.</div>');
@@ -78,11 +82,11 @@ class Groupes extends CI_Controller {
 
 
         $data['page_title'] = 'Mes groupes';
-        $data['groupesAdmin'] = $this->groupes_model->getGroupesAdmin($this->session->userdata('user_login'));
-        $data['groupesMembre'] = $this->groupes_model->getGroupesMembre($this->session->userdata('user_login'));
-        $data['demandesIntegration'] = $this->groupes_model->getDemandesIntegration($this->session->userdata('user_login'));
-        $data['etatDemandesGroupes'] = $this->groupes_model->getEtatDemandes($this->session->userdata('user_login'));
-        $data['demandesAccepteesEtRefusees'] = $this->groupes_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
+        $data['groupesAdmin'] = $this->groupes_model->getGroupesAdmin($BDdata);
+        $data['groupesMembre'] = $this->groupes_model->getGroupesMembre($BDdata);
+        $data['demandesIntegration'] = $this->groupes_model->getDemandesIntegration($BDdata);
+        $data['etatDemandesGroupes'] = $this->groupes_model->getEtatDemandes($BDdata);
+        $data['demandesAccepteesEtRefusees'] = $this->groupes_model->getDemandesAccepteesEtRefusees($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('groupes/afficher');
@@ -94,8 +98,9 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $recherche = $this->input->post('nom');
-        $resultat = $this->groupes_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['recherche'] = $this->input->post('nom');
+        $resultat = $this->groupes_model->getResultatRecherche($BDdata);
 
         if (isset($resultat[0])) {
             $return[] = '<ul>';
@@ -119,7 +124,9 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->rejoindreGroupe($this->session->userdata('user_login'), urldecode($labelGroupe));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['label'] = urldecode($labelGroupe);
+        $this->groupes_model->rejoindreGroupe($BDdata);
 
         redirect('groupes/afficher');
     }
@@ -129,7 +136,9 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->demanderRejoindreGroupe($this->session->userdata('user_login'), urldecode($labelGroupe));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['label'] = urldecode($labelGroupe);
+        $this->groupes_model->demanderRejoindreGroupe($BDdata);
 
         redirect('groupes/afficher');
     }
@@ -139,7 +148,10 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->accepterDemande($this->session->userdata('user_login'), urldecode($loginPersonne), urldecode($labelGroupe));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginUser'] = urldecode($loginPersonne);
+        $BDdata['label'] = urldecode($labelGroupe);
+        $this->groupes_model->accepterDemande($BDdata);
 
         redirect('groupes/afficher');
     }
@@ -149,7 +161,10 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->refuserDemande($this->session->userdata('user_login'), urldecode($loginPersonne), urldecode($labelGroupe));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginUser'] = urldecode($loginPersonne);
+        $BDdata['label'] = urldecode($labelGroupe);
+        $this->groupes_model->refuserDemande($BDdata);
 
         redirect('groupes/afficher');
     }
@@ -159,7 +174,9 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->quitterGroupe($this->session->userdata('user_login'), urldecode($label));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['label'] = urldecode($label);
+        $this->groupes_model->quitterGroupe($BDdata);
 
         redirect('groupes/afficher');
     }
@@ -169,7 +186,9 @@ class Groupes extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->groupes_model->supprimerGroupe($this->session->userdata('user_login'), urldecode($label));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['label'] = urldecode($label);
+        $this->groupes_model->supprimerGroupe($BDdata);
 
         redirect('groupes/afficher');
     }

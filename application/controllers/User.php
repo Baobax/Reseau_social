@@ -23,10 +23,10 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('password', 'Mot de passe', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $login = $this->input->post('login');
-            $password = hash('SHA256', $this->input->post('password'));
+            $BDdata['monLogin'] = $this->input->post('login');
+            $BDdata['password'] = hash('SHA256', $this->input->post('password'));
 
-            $user = $this->user_model->connexion($login, $password);
+            $user = $this->user_model->connexion($BDdata);
 
             //si $user[0] existe, cela veut dire que la personne existe bien et a rentré les bons identifiants
             if (isset($user[0])) {
@@ -34,8 +34,8 @@ class User extends CI_Controller {
                 $this->session->set_userdata('couleur_site', $user[0][0]['couleurSite']);
                 $this->session->set_userdata('couleur_texte', $user[0][0]['couleurTexte']);
                 $this->session->set_userdata('fond_site', $user[0][0]['fondSite']);
-                $etat = 'connecté';
-                $this->user_model->setEtat($login, $etat);
+                $BDdata['etat'] = 'connecté';
+                $this->user_model->setEtat($BDdata);
 
                 redirect("user/page");
             } else {
@@ -68,30 +68,30 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('discipline', 'Discipline', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $postdata['login'] = $this->input->post('login');
-            $postdata['email'] = $this->input->post('email');
-            $postdata['password'] = hash('SHA256', $this->input->post('password'));
-            $postdata['prenom'] = $this->input->post('prenom');
-            $postdata['nom'] = $this->input->post('nom');
-            $postdata['dateNaissance'] = $this->input->post('date_naissance');
-            $postdata['genre'] = $this->input->post('genre');
-            $postdata['annee'] = $this->input->post('annee');
-            $postdata['discipline'] = $this->input->post('discipline');
-            $postdata['couleurSite'] = '#222222';
-            $postdata['couleurTexte'] = '#222222';
-            $postdata['fondSite'] = '#eeeeee';
-            $postdata['etat'] = 'connecté';
+            $BDdata['login'] = $this->input->post('login');
+            $BDdata['email'] = $this->input->post('email');
+            $BDdata['password'] = hash('SHA256', $this->input->post('password'));
+            $BDdata['prenom'] = $this->input->post('prenom');
+            $BDdata['nom'] = $this->input->post('nom');
+            $BDdata['dateNaissance'] = $this->input->post('date_naissance');
+            $BDdata['genre'] = $this->input->post('genre');
+            $BDdata['annee'] = $this->input->post('annee');
+            $BDdata['discipline'] = $this->input->post('discipline');
+            $BDdata['couleurSite'] = '#222222';
+            $BDdata['couleurTexte'] = '#222222';
+            $BDdata['fondSite'] = '#eeeeee';
+            $BDdata['etat'] = 'connecté';
 
-            $testExistence = $this->user_model->inscription($postdata);
+            $testExistence = $this->user_model->inscription($BDdata);
 
             if (!$testExistence) {
                 $this->session->set_flashdata('message', '<div>Ce login ou email existe déjà, choisissez-en un autre.</div>');
                 redirect('user/inscription');
             } else {
-                $this->session->set_userdata('user_login', $postdata['login']);
-                $this->session->set_userdata('couleur_site', $postdata['couleurSite']);
-                $this->session->set_userdata('couleur_texte', $postdata['couleurTexte']);
-                $this->session->set_userdata('fond_site', $postdata['fondSite']);
+                $this->session->set_userdata('user_login', $BDdata['login']);
+                $this->session->set_userdata('couleur_site', $BDdata['couleurSite']);
+                $this->session->set_userdata('couleur_texte', $BDdata['couleurTexte']);
+                $this->session->set_userdata('fond_site', $BDdata['fondSite']);
                 $this->session->set_flashdata('message', '<div>Vous êtes maintenant inscrit sur le site.</div>');
 
                 redirect('user/page');
@@ -106,33 +106,15 @@ class User extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
-    /* function email_valide($email) {
-      $pieces = explode('@', $email);
-
-      if ($pieces[1] != '@enssat.fr') {
-      return false;
-      } else {
-      return true;
-      }
-      }
-
-      function email_inexistant($email) {
-      $this->load->model('user_model');
-
-      if ($this->user_model->check_si_email_existe($email)) {
-      return true;
-      } else {
-      return false;
-      }
-      } */
-
     public function page() {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');
         }
 
+
         $data['page_title'] = 'Votre page';
-        $data['publications'] = $this->user_model->getPublications($this->session->userdata('user_login'));
+        $BDdata['loginUser'] = $this->session->userdata('user_login');
+        $data['publications'] = $this->user_model->getPublications($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/page');
@@ -144,10 +126,10 @@ class User extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $user = $this->user_model->getMesInfos($this->session->userdata('user_login'));
 
         $data['page_title'] = 'Mes informations';
-        $data['user'] = $user;
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $data['user'] = $this->user_model->getMesInfos($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/mes_informations');
@@ -164,16 +146,17 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('fond_site', 'Fond du site', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $couleurSite = $this->input->post('couleur_site');
-            $couleurTexte = $this->input->post('couleur_texte');
-            $fondSite = $this->input->post('fond_site');
+            $BDdata['monLogin'] = $this->session->userdata('user_login');
+            $BDdata['couleurSite'] = $this->input->post('couleur_site');
+            $BDdata['couleurTexte'] = $this->input->post('couleur_texte');
+            $BDdata['fondSite'] = $this->input->post('fond_site');
 
-            $this->user_model->updateParametresCosmetiques($this->session->userdata('user_login'), $couleurSite, $couleurTexte, $fondSite);
+            $this->user_model->updateParametresCosmetiques($BDdata);
 
 
-            $this->session->set_userdata('couleur_site', $couleurSite);
-            $this->session->set_userdata('couleur_texte', $couleurTexte);
-            $this->session->set_userdata('fond_site', $fondSite);
+            $this->session->set_userdata('couleur_site', $BDdata['couleurSite']);
+            $this->session->set_userdata('couleur_texte', $BDdata['couleurTexte']);
+            $this->session->set_userdata('fond_site', $BDdata['fondSite']);
         }
 
 
@@ -192,11 +175,12 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('texte', 'Texte', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $texte = $this->input->post('texte');
-            $typePublication = "texte";
-            $dateAjout = date('YmdHis');
+            $BDdata['monLogin'] = $this->session->userdata('user_login');
+            $BDdata['dateAjout'] = $this->input->post('texte');
+            $BDdata['typePublication'] = "texte";
+            $BDdata['dateAjout'] = date('YmdHis');
 
-            $this->user_model->publierTexte($this->session->userdata('user_login'), $texte, $typePublication, $dateAjout);
+            $this->user_model->publierTexte($BDdata);
         }
 
         redirect('user/page');
@@ -210,18 +194,19 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('legendeVideo', 'Légende', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $legende = $this->input->post('legendeVideo');
-            $typePublication = "vidéo";
-            $dateAjout = date('YmdHis');
-
             $file = $this->_file_upload_video('fichierVideo');
+
             if ($file === 2) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : mp4</div>");
             } else if ($file === false) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Le champ fichier est requis</div>");
             } else {
-                $cheminVideo = $file['file_name'];
-                $this->user_model->publierMedia($this->session->userdata('user_login'), $cheminVideo, $legende, $typePublication, $dateAjout);
+                $BDdata['monLogin'] = $this->session->userdata('user_login');
+                $BDdata['legende'] = $this->input->post('legendeVideo');
+                $BDdata['typePublication'] = "vidéo";
+                $BDdata['dateAjout'] = date('YmdHis');
+                $BDdata['lienMedia'] = $file['file_name'];
+                $this->user_model->publierMedia($BDdata);
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>La vidéo a été ajoutée avec succès</div>");
             }
         }
@@ -237,18 +222,19 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('legende', 'Légende', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
-            $legende = $this->input->post('legende');
-            $typePublication = "image";
-            $dateAjout = date('YmdHis');
-
             $file = $this->_file_upload_img('fichier');
+
             if ($file === 2) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : gif, jpg, jpeg et png</div>");
             } else if ($file === false) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Le champ fichier est requis</div>");
             } else {
-                $cheminImage = $file['file_name'];
-                $this->user_model->publierMedia($this->session->userdata('user_login'), $cheminImage, $legende, $typePublication, $dateAjout);
+                $BDdata['monLogin'] = $this->session->userdata('user_login');
+                $BDdata['legende'] = $this->input->post('legende');
+                $BDdata['typePublication'] = "image";
+                $BDdata['dateAjout'] = date('YmdHis');
+                $BDdata['lienMedia'] = $file['file_name'];
+                $this->user_model->publierMedia($BDdata);
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>L'image a été ajoutée avec succès</div>");
             }
         }
@@ -319,7 +305,8 @@ class User extends CI_Controller {
 
 
         $data['page_title'] = 'Commentaires';
-        $data['publication'] = $this->user_model->getPublication($this->session->userdata('user_login'), urldecode($idPublication));
+        $BDdata['loginUser'] = $this->session->userdata('user_login');
+        $data['publication'] = $this->user_model->getPublication($BDdata, urldecode($idPublication));
         $data['commentaires'] = $this->user_model->getCommentairesPublication(urldecode($idPublication));
 
         $this->load->view('layout/header', $data);
@@ -332,15 +319,17 @@ class User extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->user_model->supprimerUser($this->session->userdata('user_login'));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $this->user_model->supprimerUser($BDdata);
 
         $this->session->unset_userdata('user_login');
         redirect('user/connexion');
     }
 
     public function deconnexion() {
-        $etat = 'déconnecté';
-        $this->user_model->setEtat($this->session->userdata('user_login'), $etat);
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['etat'] = 'déconnecté';
+        $this->user_model->setEtat($BDdata);
 
         $this->session->unset_userdata('user_login');
 

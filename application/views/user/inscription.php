@@ -17,13 +17,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="login">Login</label>
-                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="login" id="login" class="form-control"/>
+                                <input type="text" name="login" id="login" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="email">eMail</label>
-                                <input type="text" placeholder="Adresse en @enssat.fr" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*@enssat.fr" name="email" id="email" class="form-control"/>
+                                <input type="text" placeholder="Adresse en @enssat.fr" pattern="*@enssat.fr" name="email" id="email" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -43,13 +43,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="prenom">Prénom</label>
-                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="prenom" id="prenom" class="form-control"/>
+                                <input type="text" name="prenom" id="prenom" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nom">Nom</label>
-                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="nom" id="nom" class="form-control"/>
+                                <input type="text" name="nom" id="nom" class="form-control"/>
                             </div>
                         </div>
                     </div>

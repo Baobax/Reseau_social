@@ -7,22 +7,22 @@ class Evenements_model extends CI_Model {
         $this->load->library('neo');
     }
 
-    public function verifExistenceNom($nom) {
+    public function verifExistenceNom($data) {
         $cypher = "MATCH(evenement:EVENEMENT) "
-                . "WHERE evenement.nom = '$nom' "
+                . "WHERE evenement.nom = {nom} "
                 . "RETURN evenement.nom";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function creerEvenement($monLogin, $nom, $type, $date, $lieu) {
+    public function creerEvenement($data) {
         //Récupération des groupes auxquels appartient l'user
-        $cypher = "MATCH (user:USER)"
-                . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PARTICIPE]->(evenement:EVENEMENT{nom:'$nom', type:'$type', date:'$date', lieu:'$lieu'})";
-        $this->neo->execute_query($cypher);
+        $cypher = "MATCH (user:USER) "
+                . "WHERE user.login = {monLogin} "
+                . "CREATE (user)-[:PARTICIPE]->(evenement:EVENEMENT{nom:{nom}, type:{type}, date:{date}, lieu:{lieu}})";
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function getEvenementsParticipe($login) {
+    public function getEvenementsParticipe($data) {
         //Suppression des événements dépassés
         $cypher = "MATCH (evenement:EVENEMENT) "
                 . "WHERE evenement.date < '" . date('Y/m/d') . "' "
@@ -31,85 +31,85 @@ class Evenements_model extends CI_Model {
 
         //Récupération des événements auxquels participe l'user
         $cypher = "MATCH (user:USER)-[participe:PARTICIPE]->(evenement:EVENEMENT) "
-                . "WHERE user.login = '$login' "
+                . "WHERE user.login = {monLogin} "
                 . "RETURN evenement.nom "
                 . "ORDER BY evenement.nom";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function getResultatRecherche($monLogin, $recherche) {
+    public function getResultatRecherche($data) {
         $cypher = "MATCH (evenement:EVENEMENT) "
-                . "WHERE NOT EXISTS ((:USER{login:'$monLogin'})-[:PARTICIPE]->(evenement)) "
-                . "AND evenement.nom =~ '$recherche.*' "
+                . "WHERE NOT EXISTS ((:USER{login:{monLogin}})-[:PARTICIPE]->(evenement)) "
+                . "AND evenement.nom STARTS WITH {recherche} "
                 . "RETURN evenement.nom";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function participerEvenement($monLogin, $nom) {
+    public function participerEvenement($data) {
         //Création du lien de participation
         $cypher = "MATCH (user:USER), (evenement:EVENEMENT) "
-                . "WHERE evenement.nom = '$nom' AND user.login = '$monLogin' "
+                . "WHERE evenement.nom = {nom} AND user.login = {monLogin} "
                 . "CREATE (user)-[:PARTICIPE]->(evenement)";
-        $query = $this->neo->execute_query($cypher);
+        $query = $this->neo->execute_query($cypher, $data);
 
         //Suppression du lien de demande a participer dans le cas ou la personne
         //a reçu une invitation mais participe à l'événement depuis une recherche
         $cypher = "MATCH (:USER)-[inviteaparticiper:INVITEAPARTICIPER]->(user:USER) "
-                . "WHERE inviteaparticiper.nomEvenement = '$nom' AND user.login = '$monLogin' "
+                . "WHERE inviteaparticiper.nomEvenement = {nom} AND user.login = {monLogin} "
                 . "DELETE inviteaparticiper";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
 
         return $query;
     }
 
-    public function nePlusParticiperEvenement($monLogin, $nom) {
+    public function nePlusParticiperEvenement($data) {
         $cypher = "MATCH (user:USER)-[participe:PARTICIPE]->(evenement:EVENEMENT) "
-                . "WHERE evenement.nom = '$nom' AND user.login = '$monLogin' "
+                . "WHERE evenement.nom = {nom} AND user.login = {monLogin} "
                 . "DELETE participe";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function getEvenement($loginUser, $nom) {
+    public function getEvenement($data) {
         $cypher = "MATCH (user:USER)-[participe:PARTICIPE]->(evenement:EVENEMENT) "
-                . "WHERE user.login = '$loginUser' AND evenement.nom = '$nom' "
+                . "WHERE user.login = {monLogin} AND evenement.nom = {nom} "
                 . "RETURN {nom:evenement.nom, type:evenement.type, date:evenement.date, lieu:evenement.lieu}";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function demanderAParticiper($monLogin, $loginAmi, $nomEvenement) {
+    public function demanderAParticiper($data) {
         $cypher = "MATCH (user:USER)-[:AMI]-(ami:USER), (evenement:EVENEMENT) "
-                . "WHERE user.login = '$monLogin' AND ami.login = '$loginAmi' AND evenement.nom = '$nomEvenement' "
-                . "CREATE (user)-[:INVITEAPARTICIPER{nomEvenement:'$nomEvenement'}]->(ami)";
-        $this->neo->execute_query($cypher);
+                . "WHERE user.login = {monLogin} AND ami.login = {loginAmi} AND evenement.nom = {nomEvenement} "
+                . "CREATE (user)-[:INVITEAPARTICIPER{nomEvenement:{nomEvenement}}]->(ami)";
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function getEvenementsInvite($monLogin) {
+    public function getEvenementsInvite($data) {
         $cypher = "MATCH (:USER)-[invite:INVITEAPARTICIPER]->(user:USER) "
-                . "WHERE user.login = '$monLogin' "
+                . "WHERE user.login = {monLogin} "
                 . "RETURN invite.nomEvenement";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function accepterInvitation($loginMoi, $nomEvenement) {
+    public function accepterInvitation($data) {
         //Création du lien de participation
         $cypher = "MATCH (user:USER),(evenement:EVENEMENT) "
-                . "WHERE user.login = '$loginMoi' AND evenement.nom = '$nomEvenement' "
+                . "WHERE user.login = {monLogin} AND evenement.nom = {nomEvenement} "
                 . "CREATE (user)-[participe:PARTICIPE]->(evenement)";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
 
         //Suppression de la demande
         $cypher = "MATCH (:USER)-[inviteaparticiper:INVITEAPARTICIPER]->(user:USER) "
-                . "WHERE user.login = '$loginMoi' AND inviteaparticiper.nomEvenement = '$nomEvenement' "
+                . "WHERE user.login = {monLogin} AND inviteaparticiper.nomEvenement = {nomEvenement} "
                 . "DELETE inviteaparticiper";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function refuserInvitation($loginMoi, $nomEvenement) {
+    public function refuserInvitation($data) {
         //Suppression de la demande
         $cypher = "MATCH (:USER)-[inviteaparticiper:INVITEAPARTICIPER]->(user:USER) "
-                . "WHERE user.login = '$loginMoi' AND inviteaparticiper.nomEvenement = '$nomEvenement' "
+                . "WHERE user.login = {monLogin} AND inviteaparticiper.nomEvenement = {nomEvenement} "
                 . "DELETE inviteaparticiper";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
     }
 
 }

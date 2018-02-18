@@ -18,10 +18,11 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $amis = $this->amis_model->getListeAmis($this->session->userdata('user_login'));
-        $demandesAmisRecues = $this->amis_model->getDemandesAmisRecues($this->session->userdata('user_login'));
-        $etatDemandesAmis = $this->amis_model->getEtatDemandesAmis($this->session->userdata('user_login'));
-        $demandesAmisAccepteesEtRefusees = $this->amis_model->getDemandesAccepteesEtRefusees($this->session->userdata('user_login'));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $amis = $this->amis_model->getListeAmis($BDdata);
+        $demandesAmisRecues = $this->amis_model->getDemandesAmisRecues($BDdata);
+        $etatDemandesAmis = $this->amis_model->getEtatDemandesAmis($BDdata);
+        $demandesAmisAccepteesEtRefusees = $this->amis_model->getDemandesAccepteesEtRefusees($BDdata);
 
         $data['page_title'] = 'Amis';
         $data['amis'] = $amis;
@@ -40,9 +41,10 @@ class Amis extends CI_Controller {
         }
 
         $this->load->model('user_model');
+        $BDdata['loginUser'] = urldecode($loginAmi);
         $data['page_title'] = 'Page';
-        $data['user'] = $this->user_model->getUser(urldecode($loginAmi));
-        $data['publications'] = $this->user_model->getPublications(urldecode($loginAmi));
+        $data['user'] = $this->user_model->getUser($BDdata);
+        $data['publications'] = $this->user_model->getPublications($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('amis/page');
@@ -54,8 +56,9 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $recherche = $this->input->post('personne');
-        $resultat = $this->amis_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['recherche'] = $this->input->post('personne');
+        $resultat = $this->amis_model->getResultatRecherche($BDdata);
 
         if (isset($resultat[0])) {
             $return[] = '<ul>';
@@ -75,7 +78,9 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->amis_model->ajouter($this->session->userdata('user_login'), urldecode($loginPersonne));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginPersonne'] = urldecode($loginPersonne);
+        $this->amis_model->ajouter($BDdata);
 
         redirect('amis/afficher');
     }
@@ -85,7 +90,9 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->amis_model->accepterDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginPersonne'] = urldecode($loginPersonne);
+        $this->amis_model->accepterDemande($BDdata);
 
         redirect('amis/afficher');
     }
@@ -95,7 +102,9 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->amis_model->refuserDemande($this->session->userdata('user_login'), urldecode($loginPersonne));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginPersonne'] = urldecode($loginPersonne);
+        $this->amis_model->refuserDemande($BDdata);
 
         redirect('amis/afficher');
     }
@@ -105,7 +114,8 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->amis_model->aimerPublication($this->session->userdata('user_login'), urldecode($idPublication));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $this->amis_model->aimerPublication($BDdata, urldecode($idPublication));
 
         redirect('amis/page/' . urldecode($loginAmi));
     }
@@ -115,7 +125,8 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->amis_model->aimerPublication($this->session->userdata('user_login'), urldecode($idPublication));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $this->amis_model->aimerPublication($BDdata, urldecode($idPublication));
 
         redirect('amis/voirCommentaires/' . urldecode($idPublication) . '/' . urldecode($loginAmi));
     }
@@ -126,8 +137,9 @@ class Amis extends CI_Controller {
         }
 
         $this->load->model('user_model');
+        $BDdata['loginUser'] = urldecode($loginAmi);
         $data['page_title'] = 'Commentaires';
-        $data['publication'] = $this->user_model->getPublication(urldecode($loginAmi), urldecode($idPublication));
+        $data['publication'] = $this->user_model->getPublication($BDdata, urldecode($idPublication));
         $data['commentaires'] = $this->user_model->getCommentairesPublication(urldecode($idPublication));
 
         $this->load->view('layout/header', $data);
@@ -145,12 +157,11 @@ class Amis extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $loginAmi = $this->input->post('loginAmi');
             //Bizarrement cela ne marche pas si je met idPublication dans data donc je le laisse en dehors
+            $BDdata['monLogin'] = $this->session->userdata('user_login');
+            $BDdata['commentaire'] = $this->input->post('commentaire');
             $idPublication = $this->input->post('idPubli');
-            $data = array('monLogin' => $this->session->userdata('user_login'),
-                'commentaire' => $this->input->post('commentaire')
-            );
 
-            $this->amis_model->commenterPublication($data, $idPublication);
+            $this->amis_model->commenterPublication($BDdata, $idPublication);
         }
 
         redirect('amis/voirCommentaires/' . $idPublication . '/' . $loginAmi);
@@ -164,14 +175,16 @@ class Amis extends CI_Controller {
         $this->form_validation->set_rules('etat', 'État', 'required|trim');
         $this->load->model('user_model');
 
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
         if ($this->form_validation->run() !== FALSE) {
-            $etat = $this->input->post('etat');
-            $this->user_model->setEtat($this->session->userdata('user_login'), $etat);
+            $BDdata['etat'] = $this->input->post('etat');
+            $this->user_model->setEtat($BDdata);
         }
 
+        $BDdata['loginUser'] = $this->session->userdata('user_login');
         $data['page_title'] = 'Chat';
-        $data['user'] = $this->user_model->getUser($this->session->userdata('user_login'));
-        $data['amis'] = $this->amis_model->getListeAmis($this->session->userdata('user_login'));
+        $data['user'] = $this->user_model->getUser($BDdata);
+        $data['amis'] = $this->amis_model->getListeAmis($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('user/accueil_chat');
@@ -184,11 +197,12 @@ class Amis extends CI_Controller {
         }
 
         $this->form_validation->set_rules('message', 'Message', 'required|trim');
-        $this->load->model('user_model');
 
         if ($this->form_validation->run() !== FALSE) {
-            $message = $this->input->post('message');
-            $this->amis_model->envoiMessage($this->session->userdata('user_login'), urldecode($loginAmi), $message);
+            $BDdata['monLogin'] = $this->session->userdata('user_login');
+            $BDdata['loginAmi'] = urldecode($loginAmi);
+            $BDdata['message'] = $this->input->post('message');
+            $this->amis_model->envoiMessage($BDdata);
         }
 
         $data['page_title'] = 'Chat';

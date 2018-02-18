@@ -19,8 +19,9 @@ class Evenements extends CI_Controller {
         }
 
         $data['page_title'] = 'Mes événements';
-        $data['evenements'] = $this->evenements_model->getEvenementsParticipe($this->session->userdata('user_login'));
-        $data['evenementsInvite'] = $this->evenements_model->getEvenementsInvite($this->session->userdata('user_login'));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $data['evenements'] = $this->evenements_model->getEvenementsParticipe($BDdata);
+        $data['evenementsInvite'] = $this->evenements_model->getEvenementsInvite($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('evenements/afficher');
@@ -38,20 +39,19 @@ class Evenements extends CI_Controller {
         $this->form_validation->set_rules('date', 'Date', 'required|trim');
         $this->form_validation->set_rules('lieu', 'Lieu', 'required|trim');
 
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
         if ($this->form_validation->run() !== FALSE) {
-            $nom = $this->input->post('nom');
-            $type = $this->input->post('type');
-
-            //Formatage de la date pour la BD, ce qui permettra de supprimer l'événement si sa date est dépassée
-            //Passage de d/m/Y à Y/m/d
-            $dateTmp = explode('/', $this->input->post('date'));
-            $date = $dateTmp[2] . '/' . $dateTmp[1] . '/' . $dateTmp[0];
-
-            $lieu = $this->input->post('lieu');
-            $evenement = $this->evenements_model->verifExistenceNom($nom);
+            $BDdata['nom'] = $this->input->post('nom');
+            $evenement = $this->evenements_model->verifExistenceNom($BDdata);
 
             if (!isset($evenement[0])) {
-                $this->evenements_model->creerEvenement($this->session->userdata('user_login'), $nom, $type, $date, $lieu);
+                //Formatage de la date pour la BD, ce qui permettra de supprimer l'événement si sa date est dépassée
+                //Passage de d/m/Y à Y/m/d
+                $dateTmp = explode('/', $this->input->post('date'));
+                $BDdata['date'] = $dateTmp[2] . '/' . $dateTmp[1] . '/' . $dateTmp[0];
+                $BDdata['type'] = $this->input->post('type');
+                $BDdata['lieu'] = $this->input->post('lieu');
+                $this->evenements_model->creerEvenement($BDdata);
                 $this->session->set_flashdata('message', '<div class="alert alert-success">L\'événement a bien été créé.</div>');
             } else {
                 $this->session->set_flashdata('message', '<div class="alert alert-danger">Ce nom d\'événement existe déjà.</div>');
@@ -59,8 +59,8 @@ class Evenements extends CI_Controller {
         }
 
         $data['page_title'] = 'Mes événements';
-        $data['evenements'] = $this->evenements_model->getEvenementsParticipe($this->session->userdata('user_login'));
-        $data['evenementsInvite'] = $this->evenements_model->getEvenementsInvite($this->session->userdata('user_login'));
+        $data['evenements'] = $this->evenements_model->getEvenementsParticipe($BDdata);
+        $data['evenementsInvite'] = $this->evenements_model->getEvenementsInvite($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('evenements/afficher');
@@ -72,8 +72,9 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $recherche = $this->input->post('nom');
-        $resultat = $this->evenements_model->getResultatRecherche($this->session->userdata('user_login'), $recherche);
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['recherche'] = $this->input->post('nom');
+        $resultat = $this->evenements_model->getResultatRecherche($BDdata);
 
         if (isset($resultat[0])) {
             $return[] = '<ul>';
@@ -93,7 +94,9 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->evenements_model->participerEvenement($this->session->userdata('user_login'), urldecode($nom));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['nom'] = urldecode($nom);
+        $this->evenements_model->participerEvenement($BDdata);
 
         redirect('evenements/afficher');
     }
@@ -103,7 +106,9 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->evenements_model->nePlusParticiperEvenement($this->session->userdata('user_login'), urldecode($nom));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['nom'] = urldecode($nom);
+        $this->evenements_model->nePlusParticiperEvenement($BDdata);
 
         redirect('evenements/afficher');
     }
@@ -115,7 +120,9 @@ class Evenements extends CI_Controller {
 
 
         //Je passe en argument le login de l'user pour être sur qu'il participe bien à l'événement
-        $evenement = $this->evenements_model->getEvenement($this->session->userdata('user_login'), urldecode($nom));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['nom'] = urldecode($nom);
+        $evenement = $this->evenements_model->getEvenement($BDdata);
 
         //Je vérifie s'il appartient bien à l'événement
         if (isset($evenement[0])) {
@@ -135,18 +142,23 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $recherche = $this->input->post('recherche');
-        $nomEvenement = $this->input->post('nomEvenement');
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['recherche'] = $this->input->post('recherche');
+        $BDdata['nomEvenement'] = $this->input->post('nomEvenement');
         $this->load->model('amis_model');
-        $resultat = $this->amis_model->rechercherAmiPourInviterEvenement($this->session->userdata('user_login'), $recherche, $nomEvenement);
+        $resultat = $this->amis_model->rechercherAmiPourInviterEvenement($BDdata);
 
-        $return[] = '<ul>';
-        foreach ($resultat as $ami) {
-            $return[] = '<li>' . $ami[0]['prenom'] . ' ' . $ami[0]['nom'] . '<a href="' . base_url('evenements/demanderAParticiper/') . $ami[0]['login'] . '/' . $nomEvenement . '" title="Lui demander de participer"> <i class="fa fa-sign-in"></i></a></li>';
+        if (isset($resultat[0])) {
+            $return[] = '<ul>';
+            foreach ($resultat as $ami) {
+                $return[] = '<li>' . $ami[0]['prenom'] . ' ' . $ami[0]['nom'] . '<a href="' . base_url('evenements/demanderAParticiper/') . $ami[0]['login'] . '/' . $BDdata['nomEvenement'] . '" title="Lui demander de participer"> <i class="fa fa-sign-in"></i></a></li>';
+            }
+            $return[] = '</ul>';
+
+            echo json_encode($return);
+        } else {
+            echo json_encode('Pas de résultat');
         }
-        $return[] = '</ul>';
-
-        echo json_encode($return);
     }
 
     public function demanderAParticiper($loginAmi, $nomEvenement) {
@@ -154,7 +166,10 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->evenements_model->demanderAParticiper($this->session->userdata('user_login'), urldecode($loginAmi), urldecode($nomEvenement));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['loginAmi'] = urldecode($loginAmi);
+        $BDdata['nomEvenement'] = urldecode($nomEvenement);
+        $this->evenements_model->demanderAParticiper($BDdata);
 
         redirect('evenements/page/' . $nomEvenement);
     }
@@ -164,7 +179,9 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->evenements_model->accepterInvitation($this->session->userdata('user_login'), urldecode($nomEvenement));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['nomEvenement'] = urldecode($nomEvenement);
+        $this->evenements_model->accepterInvitation($BDdata);
 
         redirect('evenements/afficher');
     }
@@ -174,7 +191,9 @@ class Evenements extends CI_Controller {
             redirect('user/connexion');
         }
 
-        $this->evenements_model->refuserInvitation($this->session->userdata('user_login'), urldecode($nomEvenement));
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
+        $BDdata['nomEvenement'] = urldecode($nomEvenement);
+        $this->evenements_model->refuserInvitation($BDdata);
 
         redirect('evenements/afficher');
     }

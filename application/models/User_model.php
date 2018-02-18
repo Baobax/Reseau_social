@@ -7,48 +7,51 @@ class User_model extends CI_Model {
         $this->load->library('neo');
     }
 
-    public function connexion($login, $password) {
-        $cypher = "MATCH(user:USER) WHERE user.login = '$login' AND user.password = '$password' RETURN {login:user.login, couleurSite:user.couleurSite, couleurTexte:user.couleurTexte, fondSite:user.fondSite}";
-        return $this->neo->execute_query($cypher);
-    }
-
-    public function setEtat($login, $etat) {
+    public function connexion($data) {
         $cypher = "MATCH(user:USER) "
-                . "WHERE user.login = '$login' "
-                . "SET user.etat = '$etat'";
-        $this->neo->execute_query($cypher);
+                . "WHERE user.login = {monLogin} "
+                . "AND user.password = {password} "
+                . "RETURN {login:user.login, couleurSite:user.couleurSite, couleurTexte:user.couleurTexte, fondSite:user.fondSite}";
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function inscription($postdata) {
+    public function setEtat($data) {
+        $cypher = "MATCH(user:USER) "
+                . "WHERE user.login = {monLogin} "
+                . "SET user.etat = {etat}";
+        $this->neo->execute_query($cypher, $data);
+    }
+
+    public function inscription($data) {
         //vérif de l'existence du login
         $cypherTest = "MATCH(user:USER) "
-                . "WHERE user.login = '" . $postdata['login'] . "' "
+                . "WHERE user.login = {login} "
                 . "RETURN user.login";
-        $existeDeja = $this->neo->execute_query($cypherTest);
+        $existeDejaLogin = $this->neo->execute_query($cypherTest, $data);
 
-        if (isset($existeDeja[0])) {
+        if (isset($existeDejaLogin[0])) {
             return false;
         }
 
         //Vérification de l'existence de l'email
         $cypherTest = "MATCH(user:USER) "
-                . "WHERE user.email = '" . $postdata['email'] . "' "
+                . "WHERE user.email = {email} "
                 . "RETURN user.email";
-        $existeDeja = $this->neo->execute_query($cypherTest);
+        $existeDejaMail = $this->neo->execute_query($cypherTest, $data);
 
-        if (isset($existeDeja[0])) {
+        if (isset($existeDejaMail[0])) {
             return false;
         }
 
 
-        $cypher = "CREATE(user:USER{login: '" . $postdata['login'] . "', password: '" . $postdata['password'] . "', "
-                . "prenom: '" . $postdata['prenom'] . "', nom: '" . $postdata['nom'] . "', "
-                . "email: '" . $postdata['email'] . "', dateNaissance: '" . $postdata['dateNaissance'] . "', "
-                . "genre: '" . $postdata['genre'] . "', annee: '" . $postdata['annee'] . "', "
-                . "discipline: '" . $postdata['discipline'] . "', couleurSite: '" . $postdata['couleurSite'] . "', "
-                . "couleurTexte: '" . $postdata['couleurTexte'] . "', fondSite: '" . $postdata['fondSite'] . "', "
-                . "etat: '" . $postdata['etat'] . "'})";
-        $this->neo->execute_query($cypher);
+        $cypher = "CREATE(user:USER{login: {login}, password: {password}, "
+                . "prenom: {prenom}, nom: {nom}, "
+                . "email: {email}, dateNaissance: {dateNaissance}, "
+                . "genre: {genre}, annee: {annee}, "
+                . "discipline: {discipline}, couleurSite: {couleurSite}, "
+                . "couleurTexte: {couleurTexte}, fondSite: {fondSite}, "
+                . "etat: {etat}})";
+        $this->neo->execute_query($cypher, $data);
 
         return true;
     }
@@ -64,55 +67,55 @@ class User_model extends CI_Model {
         }
     }
 
-    public function getMesInfos($monLogin) {
+    public function getMesInfos($data) {
         $cypher = "MATCH(user:USER) "
-                . "WHERE user.login = '$monLogin' "
+                . "WHERE user.login = {monLogin} "
                 . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom, email:user.email, genre:user.genre, "
                 . "dateNaissance:user.dateNaissance, annee:user.annee, discipline:user.discipline}";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function updateParametresCosmetiques($login, $couleurSite, $couleurTexte, $fondSite) {
+    public function updateParametresCosmetiques($data) {
         $cypher = "MATCH(user:USER) "
-                . "WHERE user.login = '$login' "
-                . "SET user.couleurSite = '$couleurSite', user.couleurTexte = '$couleurTexte', user.fondSite = '$fondSite'";
-        $this->neo->execute_query($cypher);
+                . "WHERE user.login = {monLogin} "
+                . "SET user.couleurSite = {couleurSite}, user.couleurTexte = {couleurTexte}, user.fondSite = {fondSite}";
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function publierTexte($monLogin, $texte, $typePublication, $dateAjout) {
+    public function publierTexte($data) {
         $cypher = "MATCH (user:USER) "
-                . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$texte', type:'$typePublication', dateAjout:'$dateAjout'})";
-        $this->neo->execute_query($cypher);
+                . "WHERE user.login = {monLogin} "
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:{texte}, type:{typePublication}, dateAjout:{dateAjout}})";
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function publierMedia($monLogin, $lienMedia, $legende, $typePublication, $dateAjout) {
+    public function publierMedia($data) {
         $cypher = "MATCH (user:USER) "
-                . "WHERE user.login = '$monLogin' "
-                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:'$lienMedia', legende:'$legende', type:'$typePublication', dateAjout:'$dateAjout'})";
-        $this->neo->execute_query($cypher);
+                . "WHERE user.login = {monLogin} "
+                . "CREATE (user)-[:PUBLIE]->(:PUBLICATION{content:{lienMedia}, legende:{legende}, type:{typePublication}, dateAjout:{dateAjout}})";
+        $this->neo->execute_query($cypher, $data);
     }
 
-    public function getUser($loginUser) {
+    public function getUser($data) {
         $cypher = "MATCH (user:USER) "
-                . "WHERE user.login = '$loginUser' "
+                . "WHERE user.login = {loginUser} "
                 . "RETURN {login:user.login, prenom:user.prenom, nom:user.nom, etat:user.etat}";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function getPublications($loginUser) {
+    public function getPublications($data) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
-                . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) "
+                . "WHERE (user{login:{loginUser}})-[:PUBLIE]->(publication) "
                 . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom} "
                 . "ORDER BY publication.dateAjout DESC";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
-    public function getPublication($loginUser, $idPublication) {
+    public function getPublication($data, $idPublication) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
-                . "WHERE (user{login:'$loginUser'})-[:PUBLIE]->(publication) AND ID(publication) = $idPublication "
+                . "WHERE (user{login:{loginUser}})-[:PUBLIE]->(publication) AND ID(publication) = $idPublication "
                 . "RETURN {nbjaimes:SIZE((publication)<-[:AIME]-(:USER)), nbcommentaires:SIZE((publication)<-[:COMMENTAIRE]-(:USER)), id:ID(publication), content:publication.content, type:publication.type, legende:publication.legende, login:user.login, prenom:user.prenom, nom:user.nom}";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
     public function getCommentairesPublication($idPublication) {
@@ -122,11 +125,11 @@ class User_model extends CI_Model {
         return $this->neo->execute_query($cypher);
     }
 
-    public function supprimerUser($login) {
+    public function supprimerUser($data) {
         $cypher = "MATCH(user:USER) "
-                . "WHERE user.login = '$login' "
+                . "WHERE user.login = {monLogin} "
                 . "DETACH DELETE user";
-        $this->neo->execute_query($cypher);
+        $this->neo->execute_query($cypher, $data);
     }
 
 }

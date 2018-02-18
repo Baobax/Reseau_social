@@ -14,7 +14,7 @@
                             <?= form_open('groupes/creer') ?>
                             <div class="form-group">
                                 <label for="label">Label du groupe</label>
-                                <input type="text" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ\- ]*" name="label" id="label" class="form-control"/>
+                                <input type="text" name="label" id="label" class="form-control"/>
                             </div>
 
                             <div class="form-group">
@@ -74,9 +74,7 @@
                     <div class="col-sm-12">
                         <div class="bloc">
                             <h3>Rechercher un nouveau groupe</h3>
-
                             <hr>
-
                             <div class="row">
                                 <div class="col-sm-12">
                                     <?= form_open('', array('id' => 'form_recherche_groupe')); ?>
@@ -103,18 +101,20 @@
                     <div class="col-sm-12">
                         <div class="bloc">
                             <h3>Demandes d'intégration de groupe reçues</h3>
-
                             <hr>
-
-                            <?php if (isset($demandesIntegration[0])) : ?>
-                                <?php foreach ($demandesIntegration as $demande) : ?>
-                                    <?= $demande[0]['prenom'] . ' ' . $demande[0]['nom'] . ' souhaite rejoindre le groupe ' . $demande[0]['label'] ?>
-                                    <a href="<?= base_url('groupes/refuserDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
-                                    <a href="<?= base_url('groupes/accepterDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                Aucune demande
-                            <?php endif ?>
+                            <ul>
+                                <?php if (isset($demandesIntegration[0])) : ?>
+                                    <?php foreach ($demandesIntegration as $demande) : ?>
+                                        <li>
+                                            <?= $demande[0]['prenom'] . ' ' . $demande[0]['nom'] . ' souhaite rejoindre le groupe "' . $demande[0]['label'] . '"' ?>
+                                            <a href="<?= base_url('groupes/refuserDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-minus-circle" title="Refuser"></i></a>
+                                            <a href="<?= base_url('groupes/accepterDemande/') . $demande[0]['login'] . '/' . $demande[0]['label'] ?>"><i class="fa fa-check-circle" title="Accepter"></i></a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    Aucune demande
+                                <?php endif ?>
+                            </ul>
                         </div>
                     </div>
                 </div>
