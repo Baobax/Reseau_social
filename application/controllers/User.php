@@ -18,10 +18,11 @@ class User extends CI_Controller {
             redirect('user/page');
         }
 
-
+        //Utilisation de la librairie form_validation pour mettre en place des règles aux formulaires
         $this->form_validation->set_rules('login', 'Login', 'required|trim');
         $this->form_validation->set_rules('password', 'Mot de passe', 'required|trim');
 
+        //Si ce qu'a rentré l'utilisateur est conforme
         if ($this->form_validation->run() !== FALSE) {
             $BDdata['monLogin'] = $this->input->post('login');
             $BDdata['password'] = hash('SHA256', $this->input->post('password'));
@@ -43,7 +44,7 @@ class User extends CI_Controller {
             }
         }
 
-
+        //Titre de la page qui sera affiché dans le fichier header.php
         $data['page_title'] = 'Connexion';
 
         $this->load->view('layout/header_identification', $data);
@@ -68,8 +69,10 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('discipline', 'Discipline', 'required|trim');
 
         if ($this->form_validation->run() !== FALSE) {
+            //Récupération de tous les champs remplis pendant l'inscription
             $BDdata['login'] = $this->input->post('login');
             $BDdata['email'] = $this->input->post('email');
+            //Récupération et hashage du mot de passe pour plus de sécurité
             $BDdata['password'] = hash('SHA256', $this->input->post('password'));
             $BDdata['prenom'] = $this->input->post('prenom');
             $BDdata['nom'] = $this->input->post('nom');
@@ -153,7 +156,6 @@ class User extends CI_Controller {
 
             $this->user_model->updateParametresCosmetiques($BDdata);
 
-
             $this->session->set_userdata('couleur_site', $BDdata['couleurSite']);
             $this->session->set_userdata('couleur_texte', $BDdata['couleurTexte']);
             $this->session->set_userdata('fond_site', $BDdata['fondSite']);
@@ -176,7 +178,7 @@ class User extends CI_Controller {
 
         if ($this->form_validation->run() !== FALSE) {
             $BDdata['monLogin'] = $this->session->userdata('user_login');
-            $BDdata['dateAjout'] = $this->input->post('texte');
+            $BDdata['texte'] = $this->input->post('texte');
             $BDdata['typePublication'] = "texte";
             $BDdata['dateAjout'] = date('YmdHis');
 
@@ -196,6 +198,7 @@ class User extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $file = $this->_file_upload_video('fichierVideo');
 
+            //if : teste le retour de la fonction que j'ai créé pour voir si l'upload s'est bien passé
             if ($file === 2) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : mp4</div>");
             } else if ($file === false) {
@@ -224,6 +227,7 @@ class User extends CI_Controller {
         if ($this->form_validation->run() !== FALSE) {
             $file = $this->_file_upload_img('fichier');
 
+            //if : teste le retour de la fonction que j'ai créé pour voir si l'upload s'est bien passé
             if ($file === 2) {
                 $this->session->set_flashdata('message', "<div class='alert alert-danger'>Erreur, types d'extensions acceptées pour le fichier : gif, jpg, jpeg et png</div>");
             } else if ($file === false) {
@@ -242,6 +246,7 @@ class User extends CI_Controller {
         redirect('user/page');
     }
 
+    //Fonction d'upload d'images
     public function _file_upload_img($file) {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');
@@ -249,6 +254,7 @@ class User extends CI_Controller {
 
         if ($_FILES[$file]['name'] != "") {
             $this->load->helper("text");
+            //Formatage du nom du fichier
             $tampon = explode('.', $_FILES[$file]['name']);
             $filename = convert_accented_characters($tampon[0]);
             $config['file_name'] = url_title($filename, "_", true);
@@ -270,6 +276,7 @@ class User extends CI_Controller {
         return false;
     }
 
+    //Fonction d'upload de vidéos
     public function _file_upload_video($file) {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');
@@ -277,6 +284,7 @@ class User extends CI_Controller {
 
         if ($_FILES[$file]['name'] != "") {
             $this->load->helper("text");
+            //Formatage du nom du fichier
             $tampon = explode('.', $_FILES[$file]['name']);
             $filename = convert_accented_characters($tampon[0]);
             $config['file_name'] = url_title($filename, "_", true);
@@ -320,9 +328,26 @@ class User extends CI_Controller {
         }
 
         $BDdata['monLogin'] = $this->session->userdata('user_login');
+
+        //Récupération de tous ses fichiers uploadés
+        $medias = $this->user_model->getCheminMedias($BDdata);
+
+        //Suppression de tous ses fichiers uploadés
+        foreach ($medias as $media) {
+            if (file_exists('assets/uploads/' . $BDdata['monLogin'] . '/' . $media[0]['content'])) {
+                unlink('assets/uploads/' . $BDdata['monLogin'] . '/' . $media[0]['content']);
+            }
+        }
+        //Suppression du dossier qui contenait tous ses fichiers uploadés
+        if (file_exists('assets/uploads/' . $BDdata['monLogin'])) {
+            rmdir('assets/uploads/' . $BDdata['monLogin']);
+        }
+
+        //Suppression de l'user
         $this->user_model->supprimerUser($BDdata);
 
         $this->session->unset_userdata('user_login');
+
         redirect('user/connexion');
     }
 

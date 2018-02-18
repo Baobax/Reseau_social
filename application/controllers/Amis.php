@@ -18,6 +18,7 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
+        //Récupération de toutes les infos sur les amis (liste, demandes, ...)
         $BDdata['monLogin'] = $this->session->userdata('user_login');
         $amis = $this->amis_model->getListeAmis($BDdata);
         $demandesAmisRecues = $this->amis_model->getDemandesAmisRecues($BDdata);
@@ -25,6 +26,7 @@ class Amis extends CI_Controller {
         $demandesAmisAccepteesEtRefusees = $this->amis_model->getDemandesAccepteesEtRefusees($BDdata);
 
         $data['page_title'] = 'Amis';
+
         $data['amis'] = $amis;
         $data['demandesAmis'] = $demandesAmisRecues;
         $data['demandesAmisAccepteesEtRefusees'] = $demandesAmisAccepteesEtRefusees;
@@ -40,9 +42,10 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
+        $data['page_title'] = 'Page';
+
         $this->load->model('user_model');
         $BDdata['loginUser'] = urldecode($loginAmi);
-        $data['page_title'] = 'Page';
         $data['user'] = $this->user_model->getUser($BDdata);
         $data['publications'] = $this->user_model->getPublications($BDdata);
 
@@ -60,6 +63,7 @@ class Amis extends CI_Controller {
         $BDdata['recherche'] = $this->input->post('personne');
         $resultat = $this->amis_model->getResultatRecherche($BDdata);
 
+        //Formatage du résultat de la recherche
         if (isset($resultat[0])) {
             $return[] = '<ul>';
             foreach ($resultat as $personne) {
@@ -67,6 +71,7 @@ class Amis extends CI_Controller {
             }
             $return[] = '</ul>';
 
+            //On retourne le résultat formaté en json
             echo json_encode($return);
         } else {
             echo json_encode('Pas de résultat');
@@ -167,6 +172,7 @@ class Amis extends CI_Controller {
         redirect('amis/voirCommentaires/' . $idPublication . '/' . $loginAmi);
     }
 
+    //Le chat est en post, nous n'avons pas eu le temps d'implémenter un chat avec websocket
     public function chat() {
         if ($this->session->userdata('user_login') == NULL) {
             redirect('user/connexion');
@@ -181,8 +187,9 @@ class Amis extends CI_Controller {
             $this->user_model->setEtat($BDdata);
         }
 
-        $BDdata['loginUser'] = $this->session->userdata('user_login');
         $data['page_title'] = 'Chat';
+
+        $BDdata['loginUser'] = $this->session->userdata('user_login');
         $data['user'] = $this->user_model->getUser($BDdata);
         $data['amis'] = $this->amis_model->getListeAmis($BDdata);
 
@@ -206,6 +213,7 @@ class Amis extends CI_Controller {
         }
 
         $data['page_title'] = 'Chat';
+
         $this->load->model('user_model');
         $data['ami'] = $this->user_model->getUser(urldecode($loginAmi));
         $data['conversation'] = $this->amis_model->getConversation($this->session->userdata('user_login'), urldecode($loginAmi));

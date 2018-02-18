@@ -15,7 +15,6 @@ class Evenements_model extends CI_Model {
     }
 
     public function creerEvenement($data) {
-        //Récupération des groupes auxquels appartient l'user
         $cypher = "MATCH (user:USER) "
                 . "WHERE user.login = {monLogin} "
                 . "CREATE (user)-[:PARTICIPE]->(evenement:EVENEMENT{nom:{nom}, type:{type}, date:{date}, lieu:{lieu}})";

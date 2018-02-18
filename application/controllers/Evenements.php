@@ -45,7 +45,7 @@ class Evenements extends CI_Controller {
             $evenement = $this->evenements_model->verifExistenceNom($BDdata);
 
             if (!isset($evenement[0])) {
-                //Formatage de la date pour la BD, ce qui permettra de supprimer l'événement si sa date est dépassée
+                //Formatage de la date pour la BDD, ce qui permettra de supprimer l'événement si sa date est dépassée
                 //Passage de d/m/Y à Y/m/d
                 $dateTmp = explode('/', $this->input->post('date'));
                 $BDdata['date'] = $dateTmp[2] . '/' . $dateTmp[1] . '/' . $dateTmp[0];

@@ -23,7 +23,7 @@ class User_model extends CI_Model {
     }
 
     public function inscription($data) {
-        //vérif de l'existence du login
+        //Vérification de l'existence du login
         $cypherTest = "MATCH(user:USER) "
                 . "WHERE user.login = {login} "
                 . "RETURN user.login";
@@ -43,7 +43,7 @@ class User_model extends CI_Model {
             return false;
         }
 
-
+        //Création de l'utilisateur
         $cypher = "CREATE(user:USER{login: {login}, password: {password}, "
                 . "prenom: {prenom}, nom: {nom}, "
                 . "email: {email}, dateNaissance: {dateNaissance}, "
@@ -54,17 +54,6 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher, $data);
 
         return true;
-    }
-
-    public function check_si_email_existe($email) {
-        $cypher = "MATCH(user:USER) WHERE user.email = '$email' RETURN user.email";
-        $existeDeja = $this->neo->execute_query($cypher);
-
-        if (isset($existeDeja[0])) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     public function getMesInfos($data) {
@@ -82,6 +71,7 @@ class User_model extends CI_Model {
         $this->neo->execute_query($cypher, $data);
     }
 
+    //On crée une publication qui sera liée à son créateur à l'aide de la relation :PUBLIE
     public function publierTexte($data) {
         $cypher = "MATCH (user:USER) "
                 . "WHERE user.login = {monLogin} "
@@ -103,6 +93,9 @@ class User_model extends CI_Model {
         return $this->neo->execute_query($cypher, $data);
     }
 
+    //nbjaimes:SIZE((publication)<-[:AIME]-(:USER)) : permet de compter le nombre de j'aimes sur la publication
+    //retourne 0 s'il n'y en a pas
+    //Même principe pour nbcommentaires
     public function getPublications($data) {
         $cypher = "MATCH (publication:PUBLICATION), (user:USER) "
                 . "WHERE (user{login:{loginUser}})-[:PUBLIE]->(publication) "
@@ -125,7 +118,27 @@ class User_model extends CI_Model {
         return $this->neo->execute_query($cypher);
     }
 
+    public function getCheminMedias($data) {
+        $cypher = "MATCH (user:USER)-[:PUBLIE]->(publication:PUBLICATION) "
+                . "WHERE user.login = {monLogin} AND (publication.type = 'image' OR publication.type = 'vidéo') "
+                . "RETURN {content:publication.content}";
+        return $this->neo->execute_query($cypher, $data);
+    }
+
     public function supprimerUser($data) {
+        //Si l'user est l'admin d'un groupe, cela supprime le groupe
+        $cypher = "MATCH(user:USER)-[membre:MEMBRE]->(groupe:GROUPE) "
+                . "WHERE user.login = {monLogin} AND membre.admin = 'oui' "
+                . "DETACH DELETE groupe";
+        $this->neo->execute_query($cypher, $data);
+
+        //Suppression des publications
+        $cypher = "MATCH(user:USER)-[publie:PUBLIE]->(publication:PUBLICATION) "
+                . "WHERE user.login = {monLogin} "
+                . "DETACH DELETE publication";
+        $this->neo->execute_query($cypher, $data);
+
+        //Suppression de l'user
         $cypher = "MATCH(user:USER) "
                 . "WHERE user.login = {monLogin} "
                 . "DETACH DELETE user";

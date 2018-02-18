@@ -48,7 +48,8 @@ class Amis_model extends CI_Model {
     }
 
     public function getResultatRecherche($data) {
-        //Recherche pour une personne dont le nom ou prénom commence par la recherche
+        //Recherche pour une personne dont le nom ou prénom commence par la recherche grâce à STARTS WITH
+        //Cette personne ne doit pas être moi ou un ami que j'ai déja ou une personne à qui j'ai déja une demande en attente
         $cypher = "MATCH (user:USER) "
                 . "WHERE NOT EXISTS ((:USER{login:{monLogin}})-[:AMI]-(user)) "
                 . "AND NOT EXISTS ((:USER{login:{monLogin}})-[:DEMANDEAMI]-(user)) "
@@ -91,7 +92,7 @@ class Amis_model extends CI_Model {
         $cypher = "MATCH (user1:USER)-[ami:AMI]-(user2:USER) "
                 . "WHERE user1.login = {monLogin} "
                 . "AND (user2.prenom STARTS WITH {recherche} OR user2.nom STARTS WITH {recherche}) "
-                . "AND NOT EXISTS ((user1)-[:INVITEAPARTICIPER{nomEvenement:{nomEvenement}}]->(user2)) "
+                . "AND NOT EXISTS ((user1)-[:INVITEAPARTICIPER{nomEvenement:{nomEvenement}}]->(user2)) "//On recherche un ami qu'on a pas déjà invité à participer
                 . "RETURN {login:user2.login, prenom:user2.prenom, nom:user2.nom}";
         return $this->neo->execute_query($cypher, $data);
     }

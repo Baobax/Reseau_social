@@ -48,7 +48,6 @@ class Groupes_model extends CI_Model {
     }
 
     public function getEtatDemandes($data) {
-        //Récupération des demandes acceptées et refusées pour les indiquer à l'utilisateur
         $cypher = "MATCH (user:USER)-[demandegroupe:DEMANDEGROUPE]->(groupe:GROUPE) "
                 . "WHERE user.login = {monLogin} "
                 . "RETURN {label:groupe.label, etatDemande:demandegroupe.etatDemande}";
@@ -68,7 +67,7 @@ class Groupes_model extends CI_Model {
     }
 
     public function getGroupesAdmin($data) {
-        //Récupération des groupes auxquels appartient l'user
+        //Récupération des groupes dans lesquels l'user est admin
         $cypher = "MATCH (user:USER)-[membre:MEMBRE]->(groupe:GROUPE) "
                 . "WHERE user.login = {monLogin} "
                 . "AND membre.admin = 'oui' "
@@ -88,7 +87,6 @@ class Groupes_model extends CI_Model {
     }
 
     public function getResultatRecherche($data) {
-        //Recherche pour une personne dont le om ou prénom commence par la recherche
         $cypher = "MATCH (groupe:GROUPE) "
                 . "WHERE NOT EXISTS ((:USER{login:{monLogin}})-[:MEMBRE]->(groupe)) "
                 . "AND NOT EXISTS ((:USER{login:{monLogin}})-[:DEMANDEGROUPE]->(groupe)) "
@@ -146,7 +144,7 @@ class Groupes_model extends CI_Model {
     }
 
     public function quitterGroupe($data) {
-        //$loginUser pour vérifier que c'est bien l'user qui souhaite supprimer le groupe
+        //$loginUser pour vérifier que c'est bien l'user membre qui souhaite quitter le groupe
         $cypher = "MATCH (user:USER)-[membre:MEMBRE]->(groupe:GROUPE) "
                 . "WHERE groupe.label = {label} AND user.login = {monLogin} "
                 . "DELETE membre";
