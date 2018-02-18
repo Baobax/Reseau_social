@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer>
     ENSSAVENIR © 2018
 </footer>
 </body>

@@ -6,8 +6,8 @@
                 <hr>
                 <?php if (isset($publications[0])) : ?>
                     <?php foreach ($publications as $publication) : ?>
-                        <div class="publication">
-                            <div class="corps">
+                        <div class="bloc publication">
+                            <div class="contenu">
                                 <?php if ($publication[0]['type'] == 'vidéo') : ?>
                                     <figure>
                                         <video src="<?= base_url('assets/uploads/' . $publication[0]['login'] . '/' . $publication[0]['content']) ?>" controls>

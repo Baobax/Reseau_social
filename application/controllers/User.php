@@ -78,8 +78,8 @@ class User extends CI_Controller {
             $postdata['annee'] = $this->input->post('annee');
             $postdata['discipline'] = $this->input->post('discipline');
             $postdata['couleurSite'] = '#222222';
-            $postdata['couleurTexte'] = '#000000';
-            $postdata['fondSite'] = '#ffffff';
+            $postdata['couleurTexte'] = '#222222';
+            $postdata['fondSite'] = '#eeeeee';
             $postdata['etat'] = 'connecté';
 
             $testExistence = $this->user_model->inscription($postdata);

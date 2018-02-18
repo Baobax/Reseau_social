@@ -5,7 +5,7 @@
                 <h3>Publication  de <?= $publication[0][0]['prenom'] ?> <?= $publication[0][0]['nom'] ?></h3>
                 <hr>
                 <div class="publication">
-                    <div class="corps">
+                    <div class="contenu">
                         <?php if ($publication[0][0]['type'] == 'vidéo') : ?>
                             <figure>
                                 <video src="<?= base_url('assets/uploads/' . $publication[0][0]['login'] . '/' . $publication[0][0]['content']) ?>" controls>
@@ -26,16 +26,18 @@
                     </div>
                 </div>
 
-                <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
+                <div class="commenter">
+                    <?php if (validation_errors() != NULL) echo '<div class="alert alert-danger">' . validation_errors() . '</div>'; ?>
 
-                <?= form_open('amis/commenter') ?>
-                <label>Laisser un commentaire</label>
-                <textarea class="form-control" placeholder="Pas de caractères spéciaux" pattern="[A-Za-z0-9\- ]*" name="commentaire"></textarea>
-                <input type="hidden" name="idPubli" value="<?= $publication[0][0]['id'] ?>">
-                <input type="hidden" name="loginAmi" value="<?= $publication[0][0]['login'] ?>">
-                <br>
-                <input type="submit" class="btn" value="Envoyer">
-                <?= form_close() ?>
+                    <?= form_open('amis/commenter') ?>
+                    <label for="commentaire">Laisser un commentaire</label>
+                    <textarea class="form-control" name="commentaire" id="commentaire"></textarea>
+                    <input type="hidden" name="idPubli" value="<?= $publication[0][0]['id'] ?>">
+                    <input type="hidden" name="loginAmi" value="<?= $publication[0][0]['login'] ?>">
+                    <br>
+                    <input type="submit" class="btn" value="Envoyer">
+                    <?= form_close() ?>
+                </div>
 
                 <hr>
 

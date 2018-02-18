@@ -33,12 +33,12 @@
     <body>
         <style>
             body, .navbar {
-                background: <?= $this->session->userdata('couleur_site'); ?>;
+                background: <?= $this->session->userdata('couleur_site'); ?> !important;
             }
 
             .corps {
-                color: <?= $this->session->userdata('couleur_texte'); ?>;
-                background: <?= $this->session->userdata('fond_site'); ?>;
+                color: <?= $this->session->userdata('couleur_texte'); ?> !important;
+                background: <?= $this->session->userdata('fond_site'); ?> !important;
             }
         </style>
         <nav class="navbar navbar-default navbar-fixed-top">

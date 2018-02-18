@@ -101,11 +101,11 @@ class Amis_model extends CI_Model {
         $this->neo->execute_query($cypher);
     }
 
-    public function commenterPublication($monLogin, $idPublication, $commentaire) {
+    public function commenterPublication($data, $idPublication) {
         $cypher = "MATCH (user:USER), (publication:PUBLICATION) "
-                . "WHERE ID(publication) = $idPublication AND user.login = '$monLogin' "
-                . "CREATE (user)-[:COMMENTAIRE{commentaire:'$commentaire'}]->(publication)";
-        $this->neo->execute_query($cypher);
+                . "WHERE ID(publication) = $idPublication AND user.login = {monLogin} "
+                . "CREATE (user)-[:COMMENTAIRE{commentaire:{commentaire}}]->(publication)";
+        $this->neo->execute_query($cypher, $data);
     }
 
     public function envoiMessage($monLogin, $loginAmi, $message) {

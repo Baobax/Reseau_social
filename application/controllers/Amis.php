@@ -141,16 +141,19 @@ class Amis extends CI_Controller {
         }
 
         $this->form_validation->set_rules('commentaire', 'Commentaire', 'required|trim');
-        $idPubli = $this->input->post('idPubli');
-        $loginAmi = $this->input->post('loginAmi');
 
         if ($this->form_validation->run() !== FALSE) {
-            $commentaire = $this->input->post('commentaire');
+            $loginAmi = $this->input->post('loginAmi');
+            //Bizarrement cela ne marche pas si je met idPublication dans data donc je le laisse en dehors
+            $idPublication = $this->input->post('idPubli');
+            $data = array('monLogin' => $this->session->userdata('user_login'),
+                'commentaire' => $this->input->post('commentaire')
+            );
 
-            $this->amis_model->commenterPublication($this->session->userdata('user_login'), $idPubli, $commentaire);
+            $this->amis_model->commenterPublication($data, $idPublication);
         }
 
-        redirect('amis/voirCommentaires/' . $idPubli . '/' . $loginAmi);
+        redirect('amis/voirCommentaires/' . $idPublication . '/' . $loginAmi);
     }
 
     public function chat() {
@@ -180,6 +183,14 @@ class Amis extends CI_Controller {
             redirect('user/connexion');
         }
 
+        $this->form_validation->set_rules('message', 'Message', 'required|trim');
+        $this->load->model('user_model');
+
+        if ($this->form_validation->run() !== FALSE) {
+            $message = $this->input->post('message');
+            $this->amis_model->envoiMessage($this->session->userdata('user_login'), urldecode($loginAmi), $message);
+        }
+
         $data['page_title'] = 'Chat';
         $this->load->model('user_model');
         $data['ami'] = $this->user_model->getUser(urldecode($loginAmi));
@@ -188,17 +199,6 @@ class Amis extends CI_Controller {
         $this->load->view('layout/header', $data);
         $this->load->view('amis/page_chat');
         $this->load->view('layout/footer');
-    }
-
-    public function envoyerMessage($loginAmi) {
-        if ($this->session->userdata('user_login') == NULL) {
-            redirect('user/connexion');
-        }
-
-        $message = $this->input->post('message');
-        $this->amis_model->envoiMessage($this->session->userdata('user_login'), urldecode($loginAmi), $message);
-
-        echo true;
     }
 
 }
