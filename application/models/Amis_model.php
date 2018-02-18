@@ -118,12 +118,12 @@ class Amis_model extends CI_Model {
         $this->neo->execute_query($cypher, $data);
     }
 
-    public function getConversation($monLogin, $loginAmi) {
-        $cypher = "OPTIONAL MATCH (user:USER)-[message:MESSAGE]-(ami:USER) "
-                . "WHERE user.login = '$monLogin' AND ami.login = '$loginAmi' "
+    public function getConversation($data) {
+        $cypher = "MATCH(user:USER)-[message:MESSAGE]-(ami:USER) "
+                . "WHERE user.login = {monLogin} AND ami.login = {loginAmi} "
                 . "RETURN {loginEnvoyeur:message.loginEnvoyeur, message:message.message} "
                 . "ORDER BY message.dateEnvoi";
-        return $this->neo->execute_query($cypher);
+        return $this->neo->execute_query($cypher, $data);
     }
 
 }

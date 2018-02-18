@@ -205,8 +205,8 @@ class Amis extends CI_Controller {
 
         $this->form_validation->set_rules('message', 'Message', 'required|trim');
 
+        $BDdata['monLogin'] = $this->session->userdata('user_login');
         if ($this->form_validation->run() !== FALSE) {
-            $BDdata['monLogin'] = $this->session->userdata('user_login');
             $BDdata['loginAmi'] = urldecode($loginAmi);
             $BDdata['message'] = $this->input->post('message');
             $this->amis_model->envoiMessage($BDdata);
@@ -215,8 +215,10 @@ class Amis extends CI_Controller {
         $data['page_title'] = 'Chat';
 
         $this->load->model('user_model');
-        $data['ami'] = $this->user_model->getUser(urldecode($loginAmi));
-        $data['conversation'] = $this->amis_model->getConversation($this->session->userdata('user_login'), urldecode($loginAmi));
+        $BDdata['loginUser'] = $this->session->userdata('user_login');
+        $BDdata['loginAmi'] = urldecode($loginAmi);
+        $data['ami'] = $this->user_model->getUser($BDdata);
+        $data['conversation'] = $this->amis_model->getConversation($BDdata);
 
         $this->load->view('layout/header', $data);
         $this->load->view('amis/page_chat');
